@@ -38,6 +38,9 @@
     ],
     "python.autoComplete.extraPaths": [
         "c:/Users/berna/.vscode/extensions/rt-thread.rt-thread-micropython-1.0.11/microExamples/code-completion"
+    ],
+    "python.analysis.extraPaths": [
+        "c:/Users/berna/.vscode/extensions/rt-thread.rt-thread-micropython-1.0.11/microExamples/code-completion"
     ]
     //"python.linting.pylintArgs": "disable=C0103"
 }

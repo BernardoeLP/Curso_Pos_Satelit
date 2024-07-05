@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 myFmt = mdates.DateFormatter('%H:%M')
 
-μ = 3.986005E14 # m3/s2  Earth gravitational constant
+μ = 3.986004418E14 # m3/s2  Earth gravitational constant
 ωe =   7.2921151467E-5 # radians/s Angular Velocity of the Earth
 tGPS0 =  datetime(1980,1,6,0,0,0)
 sati = " 1"   # el satélite que me interesa lo defino de entrada para filtrar en la lectura de los archivos
@@ -266,13 +266,15 @@ for h in mensajes:
                     dxx = j[1] - x
                     dyy = j[2] - y
                     dzz = j[3] - z
+                    rp = sqrt(j[1]*j[1]+j[2]*j[2]+j[3]*j[3])
+                    drr = rp - r
+
                     dx.append(dxx)
                     dy.append(dyy)
                     dz.append(dzz)
-                    rp = sqrt(j[1]*j[1]+j[2]*j[2]+j[3]*j[3])
-                    drr = r-rp
-                    times.append(HoraCalc)
                     dr.append(drr)
+                    times.append(HoraCalc)
+
                     print(j[0].strftime("Hora: %d/%m/%Y %H:%M"))
                     print("r calculada: {:14.3f}      r precisa: {:14.3f}       r diff: {:14.3f}".format(r,rp,drr))
                     print("X calculada: {:14.3f}      X precisa: {:14.3f}       X diff: {:14.3f}".format(x,j[1],dxx))

@@ -1,4 +1,5 @@
 # pylint: disable=W0640,W0611,E0601,C0209,C0301
+### ,E1101,E1121,E1123
 
 import os
 import platform
@@ -10,7 +11,7 @@ import matplotlib.dates as mdates
 myFmt = mdates.DateFormatter('%H:%M')
 #import plotly.graph_objects as go
 
-μ = 3.986005E14 # m3/s2  Earth gravitational constant
+μ = 3.986004418E14 # m3/s2  Earth gravitational constant
 ωe =   7.2921151467E-5 # radians/s Angular Velocity of the Earth
 tGPS0 =  datetime(1980,1,6,0,0,0)
 sati = " 1"
@@ -202,7 +203,7 @@ for h in mensajes:
 
             fE  = lambda x: M + h["e"]*sin(x) - x
             dfE = lambda x: h["e"]*cos(x)-1
-            E = newton(fE,dfE,0,1E-6,4)
+            E = newton(fE,dfE,0,1E-8,4)
             r0 = a * (1 - h["e"] * cos(E))
             f = 2*atan(sqrt(1+h["e"])/sqrt(1-h["e"])*tan(E/2))
             u0 = h["omega"] + f
@@ -213,7 +214,9 @@ for h in mensajes:
             i = h["i0"] + h["Cic"] * cos(2*u0) + h["Cis"] * sin(2*u0) + h["idot"] * Delta_t
             ϴ = ωe * t
             u = ω + f
-
+            print()
+            print(HoraCalc.strftime("Hora: %d/%m/%Y %H:%M"))
+            print(E)
             xyz_prima = [[r*cos(u), 0, 0],
                          [r*sin(u), 0, 0],
                          [    0   , 0, 0]]
@@ -243,13 +246,14 @@ for h in mensajes:
             y3D.append(y)
             z3D.append(z)
 
+
             for j in precorbitas:
                 if j[0]==HoraCalc:
                     dxx = j[1] - x
                     dyy = j[2] - y
                     dzz = j[3] - z
                     rp = sqrt(j[1]*j[1]+j[2]*j[2]+j[3]*j[3])
-                    drr = r-rp
+                    drr = rp - r
 
                     dx.append(dxx)
                     dy.append(dyy)
@@ -263,6 +267,7 @@ for h in mensajes:
                     print("X calculada: {:14.3f}      X precisa: {:14.3f}       X diff: {:14.3f}".format(x,j[1],dxx))
                     print("Y calculada: {:14.3f}      Y precisa: {:14.3f}       Y diff: {:14.3f}".format(y,j[2],dyy))
                     print("Z calculada: {:14.3f}      Z precisa: {:14.3f}       Z diff: {:14.3f}".format(z,j[3],dzz))
+
 """
 
 print()
@@ -274,7 +279,7 @@ for resu in calcorbitas:
 """
 
 print()
-print("pulse cualquier tecla para plotear, 'x' o 'c' para cancelar!")    
+print("pulse cualquier tecla para plotear, 'x' o 'c' para cancelar!")
 resp_set = ['x','c','X','C']
 if platform.system() == "Linux":
     respuesta = readchar.readchar().decode('utf-8')

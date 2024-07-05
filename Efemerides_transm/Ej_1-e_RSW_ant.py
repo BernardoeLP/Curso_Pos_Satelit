@@ -113,7 +113,7 @@ def calPos(h,inst,dt):
     RR   = matmul(R3R3,R1)
     xyz  = matmul(RR,xyz_prima)
 
-    return [xyz[0][0],xyz[1][0],xyz[2][0],r]
+    return [xyz[0][0],xyz[1][0],xyz[2][0],r,u]
 
 if platform.system() == "Linux":
     import readchar # type: ignore
@@ -252,6 +252,7 @@ for m in mensajes:
             y = xyzr_calc[1]
             z = xyzr_calc[2]
             rcal = xyzr_calc[3]
+            ucal = xyzr_calc[4]
 
             t2 = t + dift
             Delta_t_dif = t2 - tref_seg
@@ -261,6 +262,7 @@ for m in mensajes:
             dif_y = dif_xyzr[1]
             dif_z = dif_xyzr[2]
             dif_r = dif_xyzr[3]
+            dif_u = dif_xyzr[4]
 
 
             """
