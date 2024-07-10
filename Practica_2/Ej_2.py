@@ -1,6 +1,7 @@
 
 from math import sqrt
 
+c = 300000000         # m/s
 
 PD = {                # PseudoDist [m]
 "28": 23334619.807,
@@ -11,6 +12,8 @@ PD = {                # PseudoDist [m]
 "10": 21505922.486,
 "08": 20958408.428
 }
+
+cant_sat = len(PD)
 
 Precisas  ={          # Efemérides Precisas [Km] , [us]
     #        X             Y              Z           clk
@@ -30,7 +33,7 @@ Estacion = [          # Coord Estación [m]
 
 
 difs = {}
-
+A = []
 def calculo():
     resu ={}
     for st in Precisas:
@@ -39,11 +42,18 @@ def calculo():
         dY = s[1] * 1000 - Estacion[1]
         dZ = s[2] * 1000 - Estacion[2]
         rprec = sqrt(dX*dX+dY*dY+dZ*dZ)
+        fila = [dX/PD[st],dY/PD[st],dZ/PD[st]]
+        A.append(fila)
         resu[st] = PD[st] - rprec
 
     return resu
 
 difs = calculo()
 
+print()
 for sat in difs:
     print(sat, difs[sat])
+
+print()
+for i in range(cant_sat):
+    print(A[i])

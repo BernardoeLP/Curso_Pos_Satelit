@@ -250,14 +250,8 @@ for m in mensajes:
             Delta_t_dif = t2 - tref_seg
             dif_xyzr = calPos(m,t2,Delta_t_dif)
 
-            dif_x = dif_xyzr[0] - x
-            dif_y = dif_xyzr[1] - y
-            dif_z = dif_xyzr[2] - z
             dif_r = dif_xyzr[3] - rcal
             dif_u = dif_xyzr[4] - ucal
-
-            posicion_x = rcal * cos(dif_u)
-            posicion_y = rcal * sin(dif_u)
 
             er = dif_r
             #es = rcal * sin(dif_u)
