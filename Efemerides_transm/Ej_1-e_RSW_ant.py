@@ -12,7 +12,7 @@ myFmt = mdates.DateFormatter('%H:%M')
 
 μ = 3.986004418E14 # m3/s2  Earth gravitational constant
 ωe =   7.2921151467E-5 # radians/s Angular Velocity of the Earth
-dift = 0.01 # seg
+dift = 0.001 # seg
 tGPS0 =  datetime(1980,1,6,0,0,0)
 sati = " 1"
 Delta_ant = 2380.80 / 1000 # m
@@ -91,29 +91,27 @@ def calPos(h,inst,dt):
     print(E)
     """
     r += Delta_ant
-    xyz_prima = [[r*cos(u), 0, 0],
-                    [r*sin(u), 0, 0],
-                    [    0   , 0, 0]]
-    posicion_x.append(r*cos(u))
-    posicion_y.append(r*sin(u))
+    xyz = [ [r*cos(u), 0, 0],
+            [r*sin(u), 0, 0],
+            [    0   , 0, 0]]
 
-    R31 = [  [  cos(-Ω),sin(-Ω), 0],
-                [ -sin(-Ω),cos(-Ω), 0],
-                [      0 ,      0 , 1]]
+    R31 = [ [  cos(-Ω),sin(-Ω), 0],
+            [ -sin(-Ω),cos(-Ω), 0],
+            [      0 ,      0 , 1]]
 
-    R32 = [  [  cos(ϴ), sin(ϴ),  0],
-                [ -sin(ϴ), cos(ϴ),  0],
-                [      0 ,     0 ,  1]]
+    R32 = [ [  cos(ϴ), sin(ϴ),  0],
+            [ -sin(ϴ), cos(ϴ),  0],
+            [      0 ,     0 ,  1]]
 
-    R1 =  [  [ 1,      0 ,       0],
-                [ 0, cos(-i), sin(-i)],
-                [ 0,-sin(-i), cos(-i)]]
+    R1 =  [ [ 1,      0 ,       0],
+            [ 0, cos(-i), sin(-i)],
+            [ 0,-sin(-i), cos(-i)]]
 
     R3R3 = matmul(R32,R31)
     RR   = matmul(R3R3,R1)
-    xyz  = matmul(RR,xyz_prima)
+    xyz_prima  = matmul(RR,xyz)
 
-    return [xyz[0][0],xyz[1][0],xyz[2][0],r,u]
+    return [xyz_prima[0][0],xyz_prima[1][0],xyz_prima[2][0],r,u]
 
 if platform.system() == "Linux":
     import readchar # type: ignore
@@ -220,23 +218,17 @@ tGPS0 += timedelta(days=GPSweek*7)
 
 tref = datetime(2001,3,19,2,0,0)
 tref_seg = int((tref-tGPS0).total_seconds())
-#tref_seg = 0
 
 t_inic = datetime(2001,3,19,0,0,0)
 ti_seg = int((t_inic-tGPS0).total_seconds())
-#ti_seg = int((t_inic-tref).total_seconds())
 
 t_fin = datetime(2001,3,19,8,15,0)
 tf_seg = int((t_fin-tGPS0).total_seconds())
-#tf_seg = int((t_fin-tref).total_seconds())
 
 posicion_x = []
 posicion_y = []
-#x3D = []
 dx = []
-#y3D = []
 dy = []
-#z3D = []
 dz = []
 times = []
 dr = []
@@ -258,12 +250,29 @@ for m in mensajes:
             Delta_t_dif = t2 - tref_seg
             dif_xyzr = calPos(m,t2,Delta_t_dif)
 
-            dif_x = dif_xyzr[0]
-            dif_y = dif_xyzr[1]
-            dif_z = dif_xyzr[2]
-            dif_r = dif_xyzr[3]
-            dif_u = dif_xyzr[4]
+            dif_x = dif_xyzr[0] - x
+            dif_y = dif_xyzr[1] - y
+            dif_z = dif_xyzr[2] - z
+            dif_r = dif_xyzr[3] - rcal
+            dif_u = dif_xyzr[4] - ucal
 
+            posicion_x = rcal * cos(dif_u)
+            posicion_y = rcal * sin(dif_u)
+
+            er = dif_r
+            #es = rcal * sin(dif_u)
+            #ew = dif_r * rcal * sin(dif_u)
+            es = rcal * dif_u
+            ew = dif_r * rcal * dif_u
+            mx = max(er,es,ew)
+            er /= mx
+            es /= mx
+            ew /= mx
+
+            print()
+            print("er: ",er)
+            print("es: ",es)
+            print("ew: ",ew)
 
             """
             x3D.append(x)
