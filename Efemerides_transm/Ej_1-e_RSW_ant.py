@@ -314,11 +314,11 @@ print()
 if (respuesta in geo_set) or (respuesta in osc_set):
 
     # ---------------------------------------------------------------------------
-    fig, ax = plt.subplots(4, sharex=True, sharey=False, gridspec_kw={'hspace': 0})
-    fig.set_size_inches(12, 7)   # w , h
-    ax[0].plot(times, dr,'o', c='darkslategray')
-    ax[0].set(ylabel= "r [m]")
     if respuesta in geo_set:
+        fig, ax = plt.subplots(4, sharex=True, sharey=False, gridspec_kw={'hspace': 0})
+        fig.set_size_inches(12, 7)   # w , h
+        ax[0].plot(times, dr,'o', c='darkslategray')
+        ax[0].set(ylabel= "r [m]")
         ax[1].plot(times, dx,'o', c='darkslategray')
         ax[1].set(ylabel= "x [m]")
         ax[2].plot(times, dy,'o', c='darkslategray')
@@ -327,12 +327,14 @@ if (respuesta in geo_set) or (respuesta in osc_set):
         ax[3].set(ylabel= "z [m]")
         fig.suptitle("Diferencias en órbitas transmitidas vs calculadas el 19/03/2001 de 0:00 a 8:00",fontsize=13)
     elif respuesta in osc_set:
-        ax[1].plot(times, der,'o', c='darkslategray')
-        ax[1].set(ylabel= "er [Unit]")
-        ax[2].plot(times, des,'o', c='darkslategray')
-        ax[2].set(ylabel= "es [Unit]")
-        ax[3].plot(times, dew,'o', c='darkslategray')
-        ax[3].set(ylabel= "ew [Unit]")
+        fig, ax = plt.subplots(3, sharex=True, sharey=False, gridspec_kw={'hspace': 0})
+        fig.set_size_inches(12, 7)   # w , h
+        ax[0].plot(times, der,'o', c='darkslategray')
+        ax[0].set(ylabel= "er [Unit]")
+        ax[1].plot(times, des,'o', c='darkslategray')
+        ax[1].set(ylabel= "es [Unit]")
+        ax[2].plot(times, dew,'o', c='darkslategray')
+        ax[2].set(ylabel= "ew [Unit]")
         fig.suptitle("Velocidades relativas para cada dirección en el sistema R,S,W el 19/03/2001 de 0:00 a 8:00",fontsize=13)
 
     for axs in ax.flat:
