@@ -282,9 +282,15 @@ for m in mensajes:
                     rp = sqrt(j[1]*j[1]+j[2]*j[2]+j[3]*j[3])
                     drr = rp - rcal
 
+                    """
+                    dx.append(er)
+                    dy.append(es)
+                    dz.append(ew)
+                    """
                     dx.append(dxx)
                     dy.append(dyy)
                     dz.append(dzz)
+
                     dr.append(drr)
                     times.append(HoraCalc)
                     #print()               0      1   2   3  4 5 6  7    8    9
