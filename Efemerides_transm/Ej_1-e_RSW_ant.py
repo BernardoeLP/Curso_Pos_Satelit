@@ -230,6 +230,9 @@ posicion_y = []
 dx = []
 dy = []
 dz = []
+der = []
+des = []
+dew = []
 times = []
 dr = []
 for m in mensajes:
@@ -282,11 +285,10 @@ for m in mensajes:
                     rp = sqrt(j[1]*j[1]+j[2]*j[2]+j[3]*j[3])
                     drr = rp - rcal
 
-                    """
-                    dx.append(er)
-                    dy.append(es)
-                    dz.append(ew)
-                    """
+                    der.append(er)
+                    des.append(es)
+                    dew.append(ew)
+
                     dx.append(dxx)
                     dy.append(dyy)
                     dz.append(dzz)
@@ -303,8 +305,12 @@ for m in mensajes:
 
 
 print()
-print("pulse cualquier tecla para plotear, 'x' o 'c' para cancelar!")
-resp_set = ['x','c','X','C']
+print(" pulse 'g' para plotear geocéntricas\n",
+       "pulse 'r' para plotear R,S,W\n",
+       "pulse cualquier otra tecla para cancelar!")
+geo_set = ['g','G']
+osc_set = ['r','R']
+
 if platform.system() == "Linux":
     respuesta = readchar.readchar().decode('utf-8')
 elif platform.system() == "Windows":
@@ -325,18 +331,27 @@ plt.show()
 
 """
 print()
-if not respuesta in resp_set:
+if (respuesta in geo_set) or (respuesta in osc_set):
+
     # ---------------------------------------------------------------------------
     fig, ax = plt.subplots(4, sharex=True, sharey=False, gridspec_kw={'hspace': 0})
     fig.set_size_inches(12, 7)   # w , h
     ax[0].plot(times, dr,'o', c='darkslategray')
     ax[0].set(ylabel= "r [m]")
-    ax[1].plot(times, dx,'o', c='darkslategray')
-    ax[1].set(ylabel= "x [m]")
-    ax[2].plot(times, dy,'o', c='darkslategray')
-    ax[2].set(ylabel= "y [m]")
-    ax[3].plot(times, dz,'o', c='darkslategray')
-    ax[3].set(ylabel= "z [m]")
+    if respuesta in geo_set:
+        ax[1].plot(times, dx,'o', c='darkslategray')
+        ax[1].set(ylabel= "x [m]")
+        ax[2].plot(times, dy,'o', c='darkslategray')
+        ax[2].set(ylabel= "y [m]")
+        ax[3].plot(times, dz,'o', c='darkslategray')
+        ax[3].set(ylabel= "z [m]")
+    elif respuesta in osc_set:
+        ax[1].plot(times, der,'o', c='darkslategray')
+        ax[1].set(ylabel= "er [Unit]")
+        ax[2].plot(times, des,'o', c='darkslategray')
+        ax[2].set(ylabel= "es [Unit]")
+        ax[3].plot(times, dew,'o', c='darkslategray')
+        ax[3].set(ylabel= "ew [Unit]")
 
     for axs in ax.flat:
         axs.label_outer()
