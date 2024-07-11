@@ -8,7 +8,6 @@ from numpy import matmul,dot
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 myFmt = mdates.DateFormatter('%H:%M')
-#import plotly.graph_objects as go
 
 μ = 3.986004418E14 # m3/s2  Earth gravitational constant
 ωe =   7.2921151467E-5 # radians/s Angular Velocity of the Earth
@@ -271,12 +270,6 @@ for m in mensajes:
             print("es: ",es)
             print("ew: ",ew)
 
-            """
-            x3D.append(x)
-            y3D.append(y)
-            z3D.append(z)
-            """
-
             for j in precorbitas:
                 if j[0]==HoraCalc:
                     dxx = j[1] - x
@@ -317,19 +310,6 @@ elif platform.system() == "Windows":
     respuesta = msvcrt.getch().decode('utf-8')
 
 
-"""
-
-# --------------------------------------------------------------------------- 
-plt.scatter(posicion_x,posicion_y)
-plt.show()
-
-# --------------------------------------------------------------------------- 
-plt.plot(times,dr)
-plt.gca().xaxis.set_major_formatter(myFmt)
-plt.xticks(rotation=90)
-plt.show()
-
-"""
 print()
 if (respuesta in geo_set) or (respuesta in osc_set):
 
@@ -345,6 +325,7 @@ if (respuesta in geo_set) or (respuesta in osc_set):
         ax[2].set(ylabel= "y [m]")
         ax[3].plot(times, dz,'o', c='darkslategray')
         ax[3].set(ylabel= "z [m]")
+        fig.suptitle("Diferencias en órbitas transmitidas vs calculadas el 19/03/2001 de 0:00 a 8:00",fontsize=13)
     elif respuesta in osc_set:
         ax[1].plot(times, der,'o', c='darkslategray')
         ax[1].set(ylabel= "er [Unit]")
@@ -352,11 +333,11 @@ if (respuesta in geo_set) or (respuesta in osc_set):
         ax[2].set(ylabel= "es [Unit]")
         ax[3].plot(times, dew,'o', c='darkslategray')
         ax[3].set(ylabel= "ew [Unit]")
+        fig.suptitle("Velocidades relativas para cada dirección en el sistema R,S,W el 19/03/2001 de 0:00 a 8:00",fontsize=13)
 
     for axs in ax.flat:
         axs.label_outer()
 
-    fig.suptitle("Diferencias en órbitas transmitidas vs calculadas el 19/03/2001 de 0:00 a 8:00",fontsize=13)
     plt.xlabel("Hora del día (UTC)",labelpad=4 ,fontsize=13)
 
     plt.gca().xaxis.set_major_formatter(myFmt)
