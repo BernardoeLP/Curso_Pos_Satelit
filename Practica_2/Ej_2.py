@@ -1,3 +1,4 @@
+# pylint: disable=C0209, W0602
 
 from math import sqrt
 from random import random
@@ -43,7 +44,9 @@ difs = {}
 A = []
 
 def calculo():
-    resu ={}
+    global difs
+    #resu ={}
+    dise = []
     for st in Precisas:
         s= Precisas[st]
         dX = s[0] * 1000 - Coord[0]
@@ -51,12 +54,12 @@ def calculo():
         dZ = s[2] * 1000 - Coord[2]
         ρ = sqrt(dX*dX+dY*dY+dZ*dZ)
         fila = [dX/ρ,dY/ρ,dZ/ρ,c]
-        A.append(fila)
-        resu[st] = PD[st] - ρ
+        dise.append(fila)
+        difs[st] = PD[st] - ρ
 
-    return resu
+    return dise
 
-difs = calculo()
+A = calculo()
 
 print()
 for sat in difs:
@@ -64,4 +67,10 @@ for sat in difs:
 
 print()
 for i in range(cant_sat):
-    print(A[i])
+    linea =""
+    """
+    for i in A[i]:
+        linea += "{:20.16f}  ".format(i) for i in A[i]:
+    print(linea)
+    """
+    print(linea += "{:20.16f}  ".format(i) for i in A[i])
