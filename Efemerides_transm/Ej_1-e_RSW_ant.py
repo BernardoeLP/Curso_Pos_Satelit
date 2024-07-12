@@ -86,8 +86,19 @@ def calPos(h,inst,dt):
     u = ω + f
     """
     print()
-    print(HoraCalc.strftime("Hora: %d/%m/%Y %H:%M"))
-    print(E)
+    print(HoraCalc.strftime("Hora: %d/%m/%Y %H:%M:%S.%f"))
+    print("dt:",dt)
+    print("M:",M)
+    print("E:",E)
+    print("f:",f)
+    if platform.system() == "Linux":
+        respuesta = readchar.readchar().decode('utf-8')
+    elif platform.system() == "Windows":
+        respuesta = msvcrt.getch().decode('utf-8')
+
+    if respuesta =="x":
+        exit()    
+
     """
     r += Delta_ant
     xyz = [ [r*cos(u), 0, 0],

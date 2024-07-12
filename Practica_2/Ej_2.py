@@ -1,7 +1,7 @@
 
 from math import sqrt
 
-c = 300000000         # m/s
+c = 299792458         # m/s  de ITRF
 
 PD = {                # PseudoDist [m]
 "28": 23334619.807,
@@ -31,6 +31,8 @@ Estacion = [          # Coord Estación [m]
     711877.0150,      # Y
     5349786.8637]     # Z
 
+# Estacion inicial, aprox 100 m de diferencia de aqui
+
 
 difs = {}
 A = []
@@ -41,10 +43,10 @@ def calculo():
         dX = s[0] * 1000 - Estacion[0]
         dY = s[1] * 1000 - Estacion[1]
         dZ = s[2] * 1000 - Estacion[2]
-        rprec = sqrt(dX*dX+dY*dY+dZ*dZ)
-        fila = [dX/PD[st],dY/PD[st],dZ/PD[st]]
+        ρ = sqrt(dX*dX+dY*dY+dZ*dZ)
+        fila = [dX/ρ,dY/ρ,dZ/ρ,c]
         A.append(fila)
-        resu[st] = PD[st] - rprec
+        resu[st] = PD[st] - ρ
 
     return resu
 
