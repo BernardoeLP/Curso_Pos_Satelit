@@ -43,7 +43,7 @@ Coord = [(i+random()*1000) for i in Estacion]
 difs = {}
 A = []
 
-def calculo():
+def arma_matriz():
     global difs
     #resu ={}
     dise = []
@@ -59,13 +59,17 @@ def calculo():
 
     return dise
 
-A = calculo()
+A = arma_matriz()
 
-print()
+
+print("\nDiferencias en distancias sat-estación\n")
+
 for sat in difs:
     print(sat, difs[sat])
 
-print()
+
+print("\n\nMatriz de diseño\n")
+
 for i in range(cant_sat):
     linea =""
     for i in A[i]:
@@ -74,3 +78,5 @@ for i in range(cant_sat):
         else:
             linea += "{:20.16f}  ".format(i)
     print(linea)
+
+print("\n")
