@@ -68,9 +68,9 @@ for sat in difs:
 print()
 for i in range(cant_sat):
     linea =""
-    """
     for i in A[i]:
-        linea += "{:20.16f}  ".format(i) for i in A[i]:
+        if i == int(i):
+            linea += "{:10d}  ".format(i)
+        else:
+            linea += "{:20.16f}  ".format(i)
     print(linea)
-    """
-    print(linea += "{:20.16f}  ".format(i) for i in A[i])
