@@ -1,5 +1,6 @@
 
 from math import sqrt
+from random import random
 
 c = 299792458         # m/s  de ITRF
 
@@ -31,7 +32,11 @@ Estacion = [          # Coord Estación [m]
     711877.0150,      # Y
     5349786.8637]     # Z
 
-# Estacion inicial, aprox 100 m de diferencia de aqui
+# Estacion inicial, agregar una diferencia 
+
+Iniciales = [(i+random()*1000) for i in Estacion]
+# print(Iniciales)
+
 
 
 difs = {}
@@ -51,7 +56,7 @@ def calculo():
     return resu
 
 difs = calculo()
-
+"""
 print()
 for sat in difs:
     print(sat, difs[sat])
@@ -59,3 +64,4 @@ for sat in difs:
 print()
 for i in range(cant_sat):
     print(A[i])
+"""
