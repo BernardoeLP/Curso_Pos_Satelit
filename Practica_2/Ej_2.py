@@ -32,22 +32,23 @@ Estacion = [          # Coord Estación [m]
     711877.0150,      # Y
     5349786.8637]     # Z
 
-# Estacion inicial, agregar una diferencia 
+# Estacion inicial, agregar una diferencia
 
-Iniciales = [(i+random()*1000) for i in Estacion]
-# print(Iniciales)
 
+Coord = [(i+random()*1000) for i in Estacion]
+# print(Coord)
 
 
 difs = {}
 A = []
+
 def calculo():
     resu ={}
     for st in Precisas:
         s= Precisas[st]
-        dX = s[0] * 1000 - Estacion[0]
-        dY = s[1] * 1000 - Estacion[1]
-        dZ = s[2] * 1000 - Estacion[2]
+        dX = s[0] * 1000 - Coord[0]
+        dY = s[1] * 1000 - Coord[1]
+        dZ = s[2] * 1000 - Coord[2]
         ρ = sqrt(dX*dX+dY*dY+dZ*dZ)
         fila = [dX/ρ,dY/ρ,dZ/ρ,c]
         A.append(fila)
@@ -56,7 +57,7 @@ def calculo():
     return resu
 
 difs = calculo()
-"""
+
 print()
 for sat in difs:
     print(sat, difs[sat])
@@ -64,4 +65,3 @@ for sat in difs:
 print()
 for i in range(cant_sat):
     print(A[i])
-"""
