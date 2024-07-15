@@ -283,26 +283,10 @@ for m in mensajes:
             difs.append(dif_xyzr[2] - z)
             rsw = to_rsw(difs,omegatita,menosi)
 
-            print(rsw)
-            """
-            dif_r = dif_xyzr[3] - rcal
-            dif_u = dif_xyzr[4] - ucal
-
-            er = dif_r
-            #es = rcal * sin(dif_u)
-            #ew = dif_r * rcal * sin(dif_u)
-            es = rcal * dif_u
-            ew = dif_r * rcal * dif_u
-            mx = max(er,es,ew)
-            er /= mx
-            es /= mx
-            ew /= mx
-
             print()
-            print("er: ",er)
-            print("es: ",es)
-            print("ew: ",ew)
-            """
+            print("Delta pos RSW:")
+            print(rsw)
+            print()
 
             for j in precorbitas:
                 if j[0]==HoraCalc:
