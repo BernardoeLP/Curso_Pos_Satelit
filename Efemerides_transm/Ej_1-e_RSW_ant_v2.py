@@ -132,8 +132,8 @@ def to_rsw(xyz,ang1,ang2):
            [ 0,-sin(ang2), cos(ang2)]]
     R3i = linalg.inv(R3)
     R1i = linalg.inv(R1)
-    R3ixyz = matmul(xyz,R3i)
-    return matmul(R3ixyz,R1i)
+    R1ixyz = matmul(xyz,R1i)   # ??
+    return matmul(R1ixyz,R3i)  # ??
 
 
 if platform.system() == "Linux":
