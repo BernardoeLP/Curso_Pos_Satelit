@@ -123,18 +123,6 @@ def calPos(h,inst,dt):
 
     return [xyz_prima[0][0],xyz_prima[1][0],xyz_prima[2][0],r,ϴ-Ω,-i]
 
-def to_rsw(xyz,ang1,ang2):
-    R3 = [ [  cos(ang1),sin(ang1), 0],
-           [ -sin(ang1),cos(ang1), 0],
-           [         0 ,       0 , 1]]
-    R1 = [ [ 1,        0 ,         0],
-           [ 0, cos(ang2), sin(ang2)],
-           [ 0,-sin(ang2), cos(ang2)]]
-    R3i = linalg.inv(R3)
-    R1i = linalg.inv(R1)
-    R1ixyz = matmul(xyz,R1i)   # ??
-    return matmul(R1ixyz,R3i)  # ??
-
 
 if platform.system() == "Linux":
     import readchar # type: ignore
@@ -277,15 +265,19 @@ for m in mensajes:
             Delta_t_dif = t2 - tref_seg
             dif_xyzr = calPos(m,t2,Delta_t_dif)
 
-            difs = []
-            difs.append(dif_xyzr[0] - x)
-            difs.append(dif_xyzr[1] - y)
-            difs.append(dif_xyzr[2] - z)
-            rsw = to_rsw(difs,omegatita,menosi)
+            deltas = []
+            deltas.append(dif_xyzr[0] - x)
+            deltas.append(dif_xyzr[1] - y)
+            deltas.append(dif_xyzr[2] - z)
+
+            mod_deltas = sqrt(deltas[0]*deltas[0]+deltas[1]*deltas[1]+deltas[2]*deltas[2])
+            deltas [0] = deltas[0]/mod_deltas
+            deltas [1] = deltas[0]/mod_deltas
+            deltas [2] = deltas[0]/mod_deltas
 
             print()
-            print("Delta pos RSW:")
-            print(rsw)
+            #print("Delta pos RSW:")
+            #print(rsw)
             print()
 
             for j in precorbitas:
@@ -295,11 +287,11 @@ for m in mensajes:
                     dzz = j[3] - z
                     rp = sqrt(j[1]*j[1]+j[2]*j[2]+j[3]*j[3])
                     drr = rp - rcal
-
+                    """
                     der.append(rsw[0])
                     des.append(rsw[1])
                     dew.append(rsw[2])
-
+                    """
                     dx.append(dxx)
                     dy.append(dyy)
                     dz.append(dzz)
@@ -313,7 +305,17 @@ for m in mensajes:
                     print("X calculada: {:14.3f}      X precisa: {:14.3f}       X diff: {:14.3f}".format(x,j[1],dxx))
                     print("Y calculada: {:14.3f}      Y precisa: {:14.3f}       Y diff: {:14.3f}".format(y,j[2],dyy))
                     print("Z calculada: {:14.3f}      Z precisa: {:14.3f}       Z diff: {:14.3f}".format(z,j[3],dzz))
+                    mod_dif = sqrt(dxx*dxx+dyy*dyy+dzz*dzz)
+                    print("Módulo de la diferencia: {:14.3f}".format( mod_dif))
 
+"""
+Producto vectorial de las diferencias en x,y,z con la posición del satélite dividida por el módulo
+Tengo la diferencia en la dirección de r
+Luego producto vectorial de las diferencias con la dirección de la velocidad difs unitarias
+a continuación entre el vector que apunta al setelite y el que apunta en la dirección de la velocidad
+hago otro porducto vectorial para obtener la dirección perpendicular al plano, cno esta dirección vuelvo a calcular 
+el producto vectorial con las diferencias, para obtener la componente en esa dirección???
+"""
 
 print()
 print(" pulse 'g' para plotear geocéntricas\n",
