@@ -4,7 +4,7 @@ import os
 import platform
 from datetime import datetime, timedelta
 from math import sin, cos, tan, atan, sqrt, pi
-from numpy import matmul,dot
+from numpy import matmul,linalg
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 myFmt = mdates.DateFormatter('%H:%M')
@@ -121,7 +121,20 @@ def calPos(h,inst,dt):
     RR   = matmul(R3R3,R1)
     xyz_prima  = matmul(RR,xyz)
 
-    return [xyz_prima[0][0],xyz_prima[1][0],xyz_prima[2][0],r,u]
+    return [xyz_prima[0][0],xyz_prima[1][0],xyz_prima[2][0],r,ϴ-Ω,-i]
+
+def to_rsw(xyz,ang1,ang2):
+    R3 = [ [  cos(ang1),sin(ang1), 0],
+           [ -sin(ang1),cos(ang1), 0],
+           [         0 ,       0 , 1]]
+    R1 = [ [ 1,        0 ,         0],
+           [ 0, cos(ang2), sin(ang2)],
+           [ 0,-sin(ang2), cos(ang2)]]
+    R3i = linalg.inv(R3)
+    R1i = linalg.inv(R1)
+    R3ixyz = matmul(xyz,R3i)
+    return matmul(R3ixyz,R1i)
+
 
 if platform.system() == "Linux":
     import readchar # type: ignore
@@ -257,12 +270,21 @@ for m in mensajes:
             y = xyzr_calc[1]
             z = xyzr_calc[2]
             rcal = xyzr_calc[3]
-            ucal = xyzr_calc[4]
+            omegatita = xyzr_calc[4]
+            menosi = xyzr_calc[5]
 
             t2 = t + dift
             Delta_t_dif = t2 - tref_seg
             dif_xyzr = calPos(m,t2,Delta_t_dif)
 
+            difs = []
+            difs.append(dif_xyzr[0] - x)
+            difs.append(dif_xyzr[1] - y)
+            difs.append(dif_xyzr[2] - z)
+            rsw = to_rsw(difs,omegatita,menosi)
+
+            print(rsw)
+            """
             dif_r = dif_xyzr[3] - rcal
             dif_u = dif_xyzr[4] - ucal
 
@@ -280,6 +302,7 @@ for m in mensajes:
             print("er: ",er)
             print("es: ",es)
             print("ew: ",ew)
+            """
 
             for j in precorbitas:
                 if j[0]==HoraCalc:
@@ -289,9 +312,9 @@ for m in mensajes:
                     rp = sqrt(j[1]*j[1]+j[2]*j[2]+j[3]*j[3])
                     drr = rp - rcal
 
-                    der.append(er)
-                    des.append(es)
-                    dew.append(ew)
+                    der.append(rsw[0])
+                    des.append(rsw[1])
+                    dew.append(rsw[2])
 
                     dx.append(dxx)
                     dy.append(dyy)
@@ -341,11 +364,11 @@ if (respuesta in geo_set) or (respuesta in osc_set):
         fig, ax = plt.subplots(3, sharex=True, sharey=False, gridspec_kw={'hspace': 0})
         fig.set_size_inches(12, 7)   # w , h
         ax[0].plot(times, der,'o', c='darkslategray')
-        ax[0].set(ylabel= "er [Unit]")
+        ax[0].set(ylabel= "er [m]")
         ax[1].plot(times, des,'o', c='darkslategray')
-        ax[1].set(ylabel= "es [Unit]")
+        ax[1].set(ylabel= "es [m]")
         ax[2].plot(times, dew,'o', c='darkslategray')
-        ax[2].set(ylabel= "ew [Unit]")
+        ax[2].set(ylabel= "ew [m]")
         fig.suptitle("Velocidades relativas para cada dirección en el sistema R,S,W el 19/03/2001 de 0:00 a 8:00",fontsize=13)
 
     for axs in ax.flat:
