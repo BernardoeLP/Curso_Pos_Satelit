@@ -334,14 +334,7 @@ for m in mensajes:
                     mod_dif = sqrt(dxx*dxx+dyy*dyy+dzz*dzz)
                     print("Módulo de la diferencia: {:14.3f}".format( mod_dif))
 
-"""
-Producto vectorial de las diferencias en x,y,z con la posición del satélite dividida por el módulo
-Tengo la diferencia en la dirección de r
-Luego producto vectorial de las diferencias con la dirección de la velocidad difs unitarias
-a continuación entre el vector que apunta al setelite y el que apunta en la dirección de la velocidad
-hago otro porducto vectorial para obtener la dirección perpendicular al plano, con esta dirección vuelvo a calcular 
-el producto vectorial con las diferencias, para obtener la componente en esa dirección???
-"""
+
 
 print()
 print(" pulse 'g' para plotear geocéntricas\n",
