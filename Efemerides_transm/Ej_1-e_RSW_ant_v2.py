@@ -100,7 +100,7 @@ def calPos(h,inst,dt):
         exit()    
 
     """
-    #r += Delta_ant
+    r += Delta_ant
     xyz = [ [r*cos(u), 0, 0],
             [r*sin(u), 0, 0],
             [    0   , 0, 0]]
