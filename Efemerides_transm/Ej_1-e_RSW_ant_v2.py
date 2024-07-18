@@ -4,12 +4,12 @@ import os
 import platform
 from datetime import datetime, timedelta
 from math import sin, cos, tan, atan, sqrt, pi
-from numpy import matmul,cross,linalg
+from numpy import matmul,cross,linalg,dot
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 myFmt = mdates.DateFormatter('%H:%M')
 
-μ = 3.986004418E14 # m3/s2  Earth gravitational constant
+μ = 3.986005E14 # m3/s2  Earth gravitational constant
 ωe =   7.2921151467E-5 # radians/s Angular Velocity of the Earth
 dift = 0.001 # seg
 tGPS0 =  datetime(1980,1,6,0,0,0)
@@ -100,7 +100,7 @@ def calPos(h,inst,dt):
         exit()    
 
     """
-    r += Delta_ant
+    #r += Delta_ant
     xyz = [ [r*cos(u), 0, 0],
             [r*sin(u), 0, 0],
             [    0   , 0, 0]]
@@ -234,6 +234,7 @@ t_inic = datetime(2001,3,19,0,0,0)
 ti_seg = int((t_inic-tGPS0).total_seconds())
 
 t_fin = datetime(2001,3,19,8,15,0)
+#t_fin = datetime(2001,3,19,4,0,0)
 tf_seg = int((t_fin-tGPS0).total_seconds())
 
 posicion_x = []
@@ -294,34 +295,34 @@ for m in mensajes:
                     dr.append(drr)
                     times.append(HoraCalc)
 
-                    
-                    #Producto vectorial de las diferencias en x,y,z con la posición del satélite dividida por el módulo
+
+                    #Producto escalar de las diferencias en x,y,z con la posición del satélite dividida por el módulo
                     dir_r = [j[1]/rp,j[2]/rp,j[3]/rp]
                     difes = [dxx,dyy,dzz]
-                    dif_r=cross(difes,dir_r)
+                    dif_r=dot(difes,dir_r)
                     #  Tengo la diferencia en la dirección de r
 
 
-                    # Luego producto vectorial de las diferencias con la dirección de la velocidad difs unitarias
-                    dif_s = cross(difes,dir_s)
+                    # Luego producto escalar de las diferencias con la dirección de la velocidad difs unitarias
+                    dif_s = dot(difes,dir_s)
                     #  Tengo la diferencia en la dirección de s
 
                     # A continuación entre el vector que apunta al setelite y el que apunta en la dirección de la velocidad
-                    # hago otro producto vectorial para obtener la dirección perpendicular al plano
+                    # hago un producto vectorial para obtener la dirección perpendicular al plano
                     dir_w = cross(dir_r,dir_s)
                     # tengo la dirección perpendicular al plano
 
-                    # con esta dirección vuelvo a calcular el producto vectorial con las diferencias
-                    dif_w = cross(difes,dir_w)
-                    # para obtener la componente en esa dirección???
+                    # con esta dirección vuelvo a calcular el producto escalar con las diferencias
+                    dif_w = dot(difes,dir_w)
+                    # para obtener la componente en esa dirección
 
                     print("R:",dif_r)
                     print("S:",dif_s)
                     print("W:",dif_w)
 
-                    der.append(linalg.norm(dif_r))
-                    des.append(linalg.norm(dif_s))
-                    dew.append(linalg.norm(dif_w))
+                    der.append(dif_r)
+                    des.append(dif_s)
+                    dew.append(dif_w)
 
                     #print()               0      1   2   3  4 5 6  7    8    9
                     #calcorbitas.append([HoraCalc,dxx,dyy,dzz,x,y,z,j[1],j[2],j[3]])
