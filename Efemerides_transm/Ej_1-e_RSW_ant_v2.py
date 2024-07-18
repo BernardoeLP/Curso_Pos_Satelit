@@ -4,7 +4,7 @@ import os
 import platform
 from datetime import datetime, timedelta
 from math import sin, cos, tan, atan, sqrt, pi
-from numpy import matmul,linalg
+from numpy import matmul,cross,linalg
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 myFmt = mdates.DateFormatter('%H:%M')
@@ -265,15 +265,15 @@ for m in mensajes:
             Delta_t_dif = t2 - tref_seg
             dif_xyzr = calPos(m,t2,Delta_t_dif)
 
-            deltas = []
-            deltas.append(dif_xyzr[0] - x)
-            deltas.append(dif_xyzr[1] - y)
-            deltas.append(dif_xyzr[2] - z)
+            dir_s = []
+            dir_s.append(dif_xyzr[0] - x)
+            dir_s.append(dif_xyzr[1] - y)
+            dir_s.append(dif_xyzr[2] - z)
 
-            mod_deltas = sqrt(deltas[0]*deltas[0]+deltas[1]*deltas[1]+deltas[2]*deltas[2])
-            deltas [0] = deltas[0]/mod_deltas
-            deltas [1] = deltas[0]/mod_deltas
-            deltas [2] = deltas[0]/mod_deltas
+            mod_dir_s = sqrt(dir_s[0]*dir_s[0]+dir_s[1]*dir_s[1]+dir_s[2]*dir_s[2])
+            dir_s [0] = dir_s[0]/mod_dir_s
+            dir_s [1] = dir_s[0]/mod_dir_s
+            dir_s [2] = dir_s[0]/mod_dir_s
 
             print()
             #print("Delta pos RSW:")
@@ -287,17 +287,42 @@ for m in mensajes:
                     dzz = j[3] - z
                     rp = sqrt(j[1]*j[1]+j[2]*j[2]+j[3]*j[3])
                     drr = rp - rcal
-                    """
-                    der.append(rsw[0])
-                    des.append(rsw[1])
-                    dew.append(rsw[2])
-                    """
+
                     dx.append(dxx)
                     dy.append(dyy)
                     dz.append(dzz)
-
                     dr.append(drr)
                     times.append(HoraCalc)
+
+                    
+                    #Producto vectorial de las diferencias en x,y,z con la posición del satélite dividida por el módulo
+                    dir_r = [j[1]/rp,j[2]/rp,j[3]/rp]
+                    difes = [dxx,dyy,dzz]
+                    dif_r=cross(difes,dir_r)
+                    #  Tengo la diferencia en la dirección de r
+
+
+                    # Luego producto vectorial de las diferencias con la dirección de la velocidad difs unitarias
+                    dif_s = cross(difes,dir_s)
+                    #  Tengo la diferencia en la dirección de s
+
+                    # A continuación entre el vector que apunta al setelite y el que apunta en la dirección de la velocidad
+                    # hago otro producto vectorial para obtener la dirección perpendicular al plano
+                    dir_w = cross(dir_r,dir_s)
+                    # tengo la dirección perpendicular al plano
+
+                    # con esta dirección vuelvo a calcular el producto vectorial con las diferencias
+                    dif_w = cross(difes,dir_w)
+                    # para obtener la componente en esa dirección???
+
+                    print("R:",dif_r)
+                    print("S:",dif_s)
+                    print("W:",dif_w)
+
+                    der.append(linalg.norm(dif_r))
+                    des.append(linalg.norm(dif_s))
+                    dew.append(linalg.norm(dif_w))
+
                     #print()               0      1   2   3  4 5 6  7    8    9
                     #calcorbitas.append([HoraCalc,dxx,dyy,dzz,x,y,z,j[1],j[2],j[3]])
                     print(j[0].strftime("Hora: %d/%m/%Y %H:%M")+"   Delta_t: {:12.3f}".format(Delta_t))
@@ -313,7 +338,7 @@ Producto vectorial de las diferencias en x,y,z con la posición del satélite di
 Tengo la diferencia en la dirección de r
 Luego producto vectorial de las diferencias con la dirección de la velocidad difs unitarias
 a continuación entre el vector que apunta al setelite y el que apunta en la dirección de la velocidad
-hago otro porducto vectorial para obtener la dirección perpendicular al plano, cno esta dirección vuelvo a calcular 
+hago otro porducto vectorial para obtener la dirección perpendicular al plano, con esta dirección vuelvo a calcular 
 el producto vectorial con las diferencias, para obtener la componente en esa dirección???
 """
 
@@ -355,7 +380,7 @@ if (respuesta in geo_set) or (respuesta in osc_set):
         ax[1].set(ylabel= "es [m]")
         ax[2].plot(times, dew,'o', c='darkslategray')
         ax[2].set(ylabel= "ew [m]")
-        fig.suptitle("Velocidades relativas para cada dirección en el sistema R,S,W el 19/03/2001 de 0:00 a 8:00",fontsize=13)
+        fig.suptitle("Diferencias en órbitas transmitidas vs calculadas en el sistema R,S,W el 19/03/2001 de 0:00 a 8:00",fontsize=13)
 
     for axs in ax.flat:
         axs.label_outer()
