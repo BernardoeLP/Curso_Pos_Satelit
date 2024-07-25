@@ -385,3 +385,6 @@ if (respuesta in geo_set) or (respuesta in osc_set):
     plt.xticks(rotation=45, ha='right',fontsize=10)
     plt.yticks(fontsize=6)
     plt.show()
+
+
+# Calcular el error entre las 0 y las 4AM

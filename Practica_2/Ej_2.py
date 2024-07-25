@@ -2,7 +2,7 @@
 
 from math import sqrt
 from random import random
-from numpy import matmul,transpose, linalg
+from numpy import transpose, linalg
 
 c = 299792458         # m/s  de ITRF
 
@@ -98,7 +98,6 @@ for i in range(cant_sat):
 
 print("\n")
 
-#X1 = matmul(matmul(linalg.inv(matmul(matmul(transpose(A),P),A)),transpose(A)),matmul(P,L))
 X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
 print()
 linea =""
