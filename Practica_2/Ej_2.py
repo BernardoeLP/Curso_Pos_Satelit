@@ -2,6 +2,7 @@
 
 from math import sqrt
 from random import random
+from numpy import matmul,transpose, linalg
 
 c = 299792458         # m/s  de ITRF
 
@@ -36,17 +37,19 @@ Estacion = [          # Coord Estación [m]
 # Estacion inicial, agregar una diferencia
 
 
-Coord = [(i+random()*1000) for i in Estacion]
+Coord = [(i+random()*10000) for i in Estacion]
 # print(Coord)
 
 
-difs = {}
+#difs = {}
+L = []
 A = []
-
-def arma_matriz():
+P = []
+def arma_matriz():    # se puede poner c* Delta_t en vez de C, entonces los resultados dan en Distancia, en vez de Delta_t
     global difs
     #resu ={}
     dise = []
+    j = 0
     for st in Precisas:
         s= Precisas[st]
         dX = s[0] * 1000 - Coord[0]
@@ -55,18 +58,32 @@ def arma_matriz():
         ρ = sqrt(dX*dX+dY*dY+dZ*dZ)
         fila = [dX/ρ,dY/ρ,dZ/ρ,c]
         dise.append(fila)
-        difs[st] = PD[st] - ρ
+        L.append(PD[st] - ρ)
+        linea_P =[0 for i in range(cant_sat)] 
+        linea_P[j]=100
+        j +=1
+        P.append(linea_P)
+        #difs[st] = PD[st] - ρ
 
     return dise
 
 A = arma_matriz()
 
-
+"""
 print("\nDiferencias en distancias sat-estación\n")
 
 for sat in difs:
     print(sat, difs[sat])
+"""
 
+print("\nObservado- calculado\n")
+for dif in L:
+    print (dif)
+print()
+
+for linea in P:
+    print(linea)
+print()
 
 print("\n\nMatriz de diseño\n")
 
@@ -80,3 +97,17 @@ for i in range(cant_sat):
     print(linea)
 
 print("\n")
+
+#X1 = matmul(matmul(linalg.inv(matmul(matmul(transpose(A),P),A)),transpose(A)),matmul(P,L))
+X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
+print()
+linea =""
+for i in Coord:
+    linea += "{:20.16f}  ".format(i)
+print(linea)
+linea =""
+for i in X1:
+    linea += "{:20.16f}  ".format(i)
+print(linea)
+
+# en la segunda iteracion el error de reloj va a estar estimado, por lo cual se agrega un término
