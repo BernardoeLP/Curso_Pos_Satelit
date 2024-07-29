@@ -6,6 +6,10 @@ from numpy import transpose, linalg
 
 c = 299792458         # m/s  de ITRF
 
+L = []
+A = []
+P = []
+
 PD = {                # PseudoDist [m]
 "28": 23334619.807,
 "13": 22586189.129,
@@ -37,79 +41,124 @@ Estacion = [          # Coord Estación [m]
 # Estacion inicial, agregar una diferencia
 
 
-Coord = [(i+random()*10000) for i in Estacion]
+Coord = [(i+random()*5000) for i in Estacion]
+
 # print(Coord)
 
 
-#difs = {}
-L = []
-A = []
-P = []
-def arma_matriz():    # se puede poner c * Delta_t en vez de C, así
+def arma_matriz(iter):    # se puede poner c * Delta_t en vez de C, así
                       # los resultados dan en Distancia, en vez de Delta_t
                       # entonces en vez de c, pongo todos unos, pues la incógnita incluye a c
-    global difs
-    #resu ={}
-    dise = []
+    global L
+    global A
+    global P
+    L = []
+    A = []
+    P = []
     j = 0
     for st in Precisas:
         s= Precisas[st]
         dX = s[0] * 1000 - Coord[0]
         dY = s[1] * 1000 - Coord[1]
         dZ = s[2] * 1000 - Coord[2]
+        if iter > 0:
+            dct = c * s[3] / 1E6  - Coord[3]
         ρ = sqrt(dX*dX+dY*dY+dZ*dZ)
-        # fila = [dX/ρ,dY/ρ,dZ/ρ,c]  # opcion con incognita Delta_t
-        fila = [dX/ρ,dY/ρ,dZ/ρ,1]  # opcion con incognita c * Delta_t
-        dise.append(fila)
+        if iter > 0:
+            fila = [dX/ρ,dY/ρ,dZ/ρ,dct]  # opcion con incognita c * Delta_t
+        else:
+            fila = [dX/ρ,dY/ρ,dZ/ρ,1]  # opcion con incognita c * Delta_t
+
+        A.append(fila)
         L.append(PD[st] - ρ)
-        linea_P =[0 for i in range(cant_sat)]
-        linea_P[j]=100
+        if iter > 0:
+            linea_P =[0 for i in range(cant_sat)]
+            linea_P[j]= ρ - float(Coord[3]) - sqrt(Coord[0]*Coord[0]+Coord[1]*Coord[1]+Coord[2]*Coord[2])
+        else:
+            linea_P =[0 for i in range(cant_sat)]
+            linea_P[j]=100
         j +=1
         P.append(linea_P)
-        #difs[st] = PD[st] - ρ
 
-    return dise
+    return
 
-A = arma_matriz()
+def imprime_resu():
 
-"""
-print("\nDiferencias en distancias sat-estación\n")
+    print("\nObservado- calculado\n")
+    for dif in L:
+        print (dif)
+    print()
 
-for sat in difs:
-    print(sat, difs[sat])
-"""
+    for linea in P:
+        print(linea)
+    print()
 
-print("\nObservado- calculado\n")
-for dif in L:
-    print (dif)
-print()
+    print("\n\nMatriz de diseño\n")
 
-for linea in P:
-    print(linea)
-print()
+    for i in range(cant_sat):
+        linea =""
+        for i in A[i]:
+            if i == int(i):
+                linea += "{:10d}  ".format(i)
+            else:
+                linea += "{:20.16f}  ".format(i)
+        print(linea)
 
-print("\n\nMatriz de diseño\n")
-
-for i in range(cant_sat):
+    print("\n")
+    print()
+    print("Coord Calculada")
     linea =""
-    for i in A[i]:
-        if i == int(i):
-            linea += "{:10d}  ".format(i)
-        else:
-            linea += "{:20.16f}  ".format(i)
+    for i in Coord:
+        linea += "{:20.16f}  ".format(i)
     print(linea)
+    print()
 
-print("\n")
+    print("Delta X Calculada")
+    linea =""
+    for i in X1:
+        linea += "{:20.16f}  ".format(i)
+    print(linea)
+    print()
 
+    print("Coord Corregida")
+    linea =""
+    j = 0
+    for i in Coord:
+        linea += "{:20.16f}  ".format(i)
+        if j<3:
+            linea += "{:20.16f}\n".format(Estacion[j])
+        else:
+            linea += '\n'
+        j +=1
+    print(linea)
+    return
+
+
+arma_matriz(0)
+Coord.append(0)
 X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
-print()
-linea =""
-for i in Coord:
-    linea += "{:20.16f}  ".format(i)
-print(linea)
-linea =""
+j = 0
 for i in X1:
-    linea += "{:20.16f}  ".format(i)
-print(linea)
+    Coord[j] += i
+    j +=1
+imprime_resu()
+
+arma_matriz(1)
+X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
+j = 0
+for i in X1:
+    Coord[j] += i
+    j +=1
+imprime_resu()
+
+arma_matriz(1)
+X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
+j = 0
+for i in X1:
+    Coord[j] += i
+    j +=1
+imprime_resu()
+
+
 
 # en la segunda iteracion el error de reloj va a estar estimado, por lo cual se agrega un término
