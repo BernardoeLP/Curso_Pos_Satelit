@@ -46,6 +46,7 @@ L = []
 A = []
 P = []
 def arma_matriz():    # se puede poner c* Delta_t en vez de C, entonces los resultados dan en Distancia, en vez de Delta_t
+                      # entonces en vez de c, pongo todos unos, pues la incógnita incluye a c
     global difs
     #resu ={}
     dise = []
@@ -56,7 +57,8 @@ def arma_matriz():    # se puede poner c* Delta_t en vez de C, entonces los resu
         dY = s[1] * 1000 - Coord[1]
         dZ = s[2] * 1000 - Coord[2]
         ρ = sqrt(dX*dX+dY*dY+dZ*dZ)
-        fila = [dX/ρ,dY/ρ,dZ/ρ,c]
+        # fila = [dX/ρ,dY/ρ,dZ/ρ,c]  # opcion con incognita Delta_t
+        fila = [dX/ρ,dY/ρ,dZ/ρ,1]  # opcion con incognita c * Delta_t
         dise.append(fila)
         L.append(PD[st] - ρ)
         linea_P =[0 for i in range(cant_sat)] 
