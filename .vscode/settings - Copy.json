@@ -1,0 +1,46 @@
+{
+    "files.associations": {
+        "CHILD.C": "cpp",
+        "GPSTIME.C": "cpp",
+        "GLIB.C": "cpp",
+        "RIOMAIN.C": "cpp",
+        "RIOARGU.C": "cpp",
+        "RIOAGST.C": "cpp",
+        "RIOGRF1.C": "cpp",
+        "RIOMENU.C": "cpp",
+        "RIOWR.C": "cpp"
+    },
+    "python.languajeSserver": "Pylance",
+    "pylint.args": [
+        "--disable=missing-module-docstring",
+        "--disable=missing-class-docstring",
+        "--disable=missing-function-docstring",
+        "--disable=unspecified-encoding",
+        "--disable=C0103, W0105, C0206, C2401, C3001" // <--- this one
+    ],
+    "MicroPython.executeButton": [
+        {
+            "text": "▶",
+            "tooltip": "Run",
+            "alignment": "left",
+            "command": "extension.executeFile",
+            "priority": 3.5
+        }
+    ],
+    "MicroPython.syncButton": [
+        {
+            "text": "$(sync)",
+            "tooltip": "sync",
+            "alignment": "left",
+            "command": "extension.execute",
+            "priority": 4
+        }
+    ],
+    "python.autoComplete.extraPaths": [
+        "c:/Users/berna/.vscode/extensions/rt-thread.rt-thread-micropython-1.0.11/microExamples/code-completion"
+    ],
+    "python.analysis.extraPaths": [
+        "c:/Users/berna/.vscode/extensions/rt-thread.rt-thread-micropython-1.0.11/microExamples/code-completion"
+    ]
+    //"python.linting.pylintArgs": "disable=C0103"
+}
