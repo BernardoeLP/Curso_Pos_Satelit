@@ -122,12 +122,15 @@ def imprime_Correg():
     """ Imprime una vez recalculado"""
     print("Coord Corregida,    Exacta,     Diferencia")
     #linea =""
+    r = linalg.norm(Estacion)
+    c = [Coord[i] for i in range(len(Coord)-1)]
+    d = linalg.norm(c)
     j = 0
     for i in Coord:
         if j<3:
             linea = "{:20.10f}  {:20.10f}  -->{:20.10f}".format(i,Estacion[j],i-Estacion[j])
         else:
-            linea = "{:20.10f}\n".format(i)
+            linea = "{:20.10f}  {:20.10f}  -->{:20.10f}\n".format(i,r,)
         j +=1
         print(linea)
 
