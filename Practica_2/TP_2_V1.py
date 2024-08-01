@@ -1,4 +1,5 @@
-# pylint: disable=C0209, W0602
+""" Practica 2 """
+# pylint: disable= C0103, C0206, C0301, C0209, W0602, W0603, W0621
 
 import os
 import platform
@@ -11,7 +12,8 @@ c = 299792458         # m/s  de ITRF
 
 L = []
 A = []
-P = []
+C = []
+
 
 PD = {                # PseudoDist [m]
 "28": 23334619.807,
@@ -49,43 +51,36 @@ Coord = [(i+random()*5000) for i in Estacion]
 # print(Coord)
 
 
-def arma_matriz(iter):    # se puede poner c * Delta_t en vez de C, así
-                      # los resultados dan en Distancia, en vez de Delta_t
-                      # entonces en vez de c, pongo todos unos, pues la incógnita incluye a c
+def arma_matriz():
+    """     se puede poner c * Delta_t en vez de C, así
+            los resultados dan en Distancia, en vez de Delta_t
+            entonces en vez de c, pongo todos unos, pues la incógnita incluye a c
+    """
     global L
     global A
-    global P
+    global C
     L = []
     A = []
-    P = []
+    C = []
     j = 0
     for st in Precisas:
         s= Precisas[st]
         dX = s[0] * 1000 - Coord[0]
         dY = s[1] * 1000 - Coord[1]
         dZ = s[2] * 1000 - Coord[2]
-        if iter > 0:
-            dct = c * s[3] / 1E6  - Coord[3]
         ρ = sqrt(dX*dX+dY*dY+dZ*dZ)
-        if iter > 0:
-            fila = [dX/ρ,dY/ρ,dZ/ρ,dct]  # opcion con incognita c * Delta_t
-        else:
-            fila = [dX/ρ,dY/ρ,dZ/ρ,1]  # opcion con incognita c * Delta_t
+        fila = [dX/ρ,dY/ρ,dZ/ρ,1]  # opcion con incognita c * Delta_t
 
         A.append(fila)
-        L.append(PD[st] - ρ)
-        if iter > 0:
-            linea_P =[0 for i in range(cant_sat)]
-            linea_P[j]= ρ - float(Coord[3]) - sqrt(Coord[0]*Coord[0]+Coord[1]*Coord[1]+Coord[2]*Coord[2])
-        else:
-            linea_P =[0 for i in range(cant_sat)]
-            linea_P[j]=100
+        L.append(PD[st] - ρ - float(Coord[3]))
+        linea_C =[0 for i in range(cant_sat)]
+        linea_C[j]= ρ - float(Coord[3]) - sqrt(Coord[0]*Coord[0]+Coord[1]*Coord[1]+Coord[2]*Coord[2])
         j +=1
-        P.append(linea_P)
+        C.append(linea_C)
 
-    return
 
 def imprime_resu():
+    """Imprime resultados parciales"""
 
     print("\nObservado- calculado\n")
     for dif in L:
@@ -123,57 +118,63 @@ def imprime_resu():
     print(linea)
     print()
 
-    print("Coord Corregida")
+def imprime_Correg():
+    print("Coord Corregida,    Exacta ")
     linea =""
     j = 0
     for i in Coord:
-        linea += "{:20.16f}  ".format(i)
+        linea += "{:20.10f}  ".format(i)
         if j<3:
-            linea += "{:20.16f}\n".format(Estacion[j])
+            linea += "{:20.10f}\n".format(Estacion[j])
         else:
             linea += '\n'
         j +=1
     print(linea)
-    return
 
 
 
 
 if platform.system() == "Linux":
-    import readchar # type: ignore
+    # import readchar # type: ignore
     os.system('clear')
 elif platform.system() == "Windows":
-    import msvcrt   # type: ignore
+    # import msvcrt   # type: ignore
     os.system('cls')
 
 
-arma_matriz(0)
 Coord.append(0)
+arma_matriz()
+P = linalg.inv(C)
 #X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
 X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
+imprime_resu()
 j = 0
 for i in X1:
     Coord[j] += i
     j +=1
-imprime_resu()
+imprime_Correg()
 
-arma_matriz(1)
+arma_matriz()
+P = linalg.inv(C)
 #X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
 X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
+imprime_resu()
 j = 0
 for i in X1:
     Coord[j] += i
     j +=1
-imprime_resu()
+imprime_Correg()
 
-arma_matriz(1)
+arma_matriz()
+P = linalg.inv(C)
 #X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
 X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
+imprime_resu()
 j = 0
 for i in X1:
     Coord[j] += i
     j +=1
-imprime_resu()
+imprime_Correg()
 
 
 
