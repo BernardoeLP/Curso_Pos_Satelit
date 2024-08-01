@@ -130,7 +130,7 @@ def imprime_Correg():
         if j<3:
             linea = "{:20.10f}  {:20.10f}  -->{:20.10f}".format(i,Estacion[j],i-Estacion[j])
         else:
-            linea = "{:20.10f}  {:20.10f}  -->{:20.10f}\n".format(i,r,)
+            linea = "{:20.10f}  {:20.10f}  -->{:20.10f}\n".format(i,r,i+r)
         j +=1
         print(linea)
 
