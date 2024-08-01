@@ -119,17 +119,17 @@ def imprime_resu():
     print()
 
 def imprime_Correg():
-    print("Coord Corregida,    Exacta ")
-    linea =""
+    """ Imprime una vez recalculado"""
+    print("Coord Corregida,    Exacta,     Diferencia")
+    #linea =""
     j = 0
     for i in Coord:
-        linea += "{:20.10f}  ".format(i)
         if j<3:
-            linea += "{:20.10f}\n".format(Estacion[j])
+            linea = "{:20.10f}  {:20.10f}  -->{:20.10f}".format(i,Estacion[j],i-Estacion[j])
         else:
-            linea += '\n'
+            linea = "{:20.10f}\n".format(i)
         j +=1
-    print(linea)
+        print(linea)
 
 
 
@@ -148,10 +148,13 @@ P = linalg.inv(C)
 #X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
 X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
 imprime_resu()
+Coord=[(Coord[i]+X1[i]) for i in range( len(Coord))]
+"""
 j = 0
 for i in X1:
     Coord[j] += i
     j +=1
+"""
 imprime_Correg()
 
 arma_matriz()
@@ -159,10 +162,12 @@ P = linalg.inv(C)
 #X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
 X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
 imprime_resu()
-j = 0
+Coord=[(Coord[i]+X1[i]) for i in range( len(Coord))]
+"""j = 0
 for i in X1:
     Coord[j] += i
     j +=1
+"""
 imprime_Correg()
 
 arma_matriz()
@@ -170,10 +175,12 @@ P = linalg.inv(C)
 #X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
 X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
 imprime_resu()
-j = 0
+Coord=[(Coord[i]+X1[i]) for i in range( len(Coord))]
+"""j = 0
 for i in X1:
     Coord[j] += i
     j +=1
+"""
 imprime_Correg()
 
 
