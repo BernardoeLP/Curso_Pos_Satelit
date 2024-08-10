@@ -46,7 +46,7 @@ Estacion = [          # Coord Estación [m]
 # Estacion inicial, agregar una diferencia
 
 
-#Coord = [(i+random()*5000) for i in Estacion]
+#Coord = [(i+((random()-1)+0.5)*5000) for i in Estacion]
 Coord = Estacion
 Coord.append(0)
 # print(Coord)
