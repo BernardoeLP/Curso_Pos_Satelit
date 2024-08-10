@@ -44,10 +44,10 @@ Estacion = [          # Coord Estación [m]
     5349786.8637]     # Z
 
 # Estacion inicial, agregar una diferencia
- 
+
 
 Coord = [(i+random()*5000) for i in Estacion]
-
+Coord.append(0)
 # print(Coord)
 
 
@@ -77,7 +77,6 @@ def arma_matriz():
         linea_C[j]= ρ - float(Coord[3]) - sqrt(Coord[0]*Coord[0]+Coord[1]*Coord[1]+Coord[2]*Coord[2])
         j +=1
         C.append(linea_C)
-
 
 def imprime_resu():
     """Imprime resultados parciales"""
@@ -145,48 +144,20 @@ elif platform.system() == "Windows":
     os.system('cls')
 
 
-Coord.append(0)
-imprime_Correg()
-arma_matriz()
-P = linalg.inv(C)
-X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
-#X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
-imprime_resu()
-Coord=[(Coord[i]+X1[i]) for i in range( len(Coord))]
-"""
-j = 0
-for i in X1:
-    Coord[j] += i
-    j +=1
-"""
-imprime_Correg()
-
-arma_matriz()
-P = linalg.inv(C)
-X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
-#X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
-imprime_resu()
-Coord=[(Coord[i]+X1[i]) for i in range( len(Coord))]
-"""j = 0
-for i in X1:
-    Coord[j] += i
-    j +=1
-"""
-imprime_Correg()
-
-arma_matriz()
-P = linalg.inv(C)
-X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
-#X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
-imprime_resu()
-Coord=[(Coord[i]+X1[i]) for i in range( len(Coord))]
-"""j = 0
-for i in X1:
-    Coord[j] += i
-    j +=1
-"""
-imprime_Correg()
-
-
-
 # en la segunda iteracion el error de reloj va a estar estimado, por lo cual se agrega un término
+
+for paso in range(3):
+    imprime_Correg()
+    arma_matriz()
+    P = linalg.inv(C)
+    X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
+    #X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
+    imprime_resu()
+    """
+    j = 0
+    for i in X1:
+        Coord[j] += i
+        j +=1
+    """
+    Coord=[(Coord[i]+X1[i]) for i in range( len(Coord))]  # a more 'pythonic' way
+
