@@ -44,7 +44,7 @@ Estacion = [          # Coord Estación [m]
     5349786.8637]     # Z
 
 # Estacion inicial, agregar una diferencia
-
+ 
 
 Coord = [(i+random()*5000) for i in Estacion]
 
