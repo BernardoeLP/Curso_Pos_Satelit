@@ -46,8 +46,8 @@ Estacion = [          # Coord Estación [m]
 # Estacion inicial, agregar una diferencia
 
 
-#Coord = [(i+((random()-1)+0.5)*5000) for i in Estacion]
-Coord = Estacion
+Coord = [(i+(random()-0.5)*5000) for i in Estacion]
+#Coord = Estacion
 Coord.append(0)
 # print(Coord)
 
@@ -73,7 +73,7 @@ def arma_matriz():
         fila = [dX/ρ,dY/ρ,dZ/ρ,1]  # opcion con incognita c * Delta_t
 
         A.append(fila)
-        L.append(PD[st] - ρ - float(Coord[3]))
+        L.append(PD[st] - ρ + float(Coord[3]))
         linea_C =[0 for i in range(cant_sat)]
         linea_C[j]= ρ - float(Coord[3]) - sqrt(Coord[0]*Coord[0]+Coord[1]*Coord[1]+Coord[2]*Coord[2])
         j +=1
@@ -129,9 +129,9 @@ def imprime_Correg():
     j = 0
     for i in Coord:
         if j<3:
-            linea = "{:20.10f}  {:20.10f}  -->{:20.10f}".format(i,Estacion[j],i-Estacion[j])
+            linea = "{:15.5f}  {:15.5f}  -->{:15.5f}".format(i,Estacion[j],i-Estacion[j])
         else:
-            linea = "\n c * Delta_t: {:20.10f}\n".format(i)
+            linea = "\n c * Delta_t: {:15.5f}\n".format(i)
         j +=1
         print(linea)
     """
@@ -170,5 +170,5 @@ for paso in range(3):
         Coord[j] += i
         j +=1
     """
-    Coord=[(Coord[i]+X1[0][i]) for i in range( len(Coord))]  # a more 'pythonic' way
+    Coord=[(Coord[i]-X1[0][i]) for i in range( len(Coord))]  # a more 'pythonic' way
     imprime_Correg()
