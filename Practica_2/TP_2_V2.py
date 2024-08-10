@@ -46,7 +46,7 @@ Estacion = [          # Coord Estación [m]
 # Estacion inicial, agregar una diferencia
 
 
-#Coord = [(i+random()*5000) for i in Estacion]
+Coord = [(i+random()*5000) for i in Estacion]
 Coord = Estacion
 Coord.append(0)
 # print(Coord)
@@ -81,16 +81,16 @@ def arma_matriz():
 
 def imprime_resu():
     """Imprime resultados parciales"""
-
+    """
     print("\nObservado- calculado\n")
     for dif in L:
         print (dif)
     print()
-    """
+
     for linea in P:
         print(linea)
     print()
-    """
+
     print("\n\nMatriz de diseño\n")
 
     for i in range(cant_sat):
@@ -101,7 +101,7 @@ def imprime_resu():
             else:
                 linea += "{:20.16f}  ".format(i)
         print(linea)
-
+    """
     print("\n")
     print()
     print("Coord Calculada")
@@ -113,8 +113,9 @@ def imprime_resu():
 
     print("Delta X Calculada")
     linea =""
-    for i in X1:
-        linea += "{:20.16f}  ".format(i)
+    for i in X1[0]:
+        #linea += "{:20.16f}  ".format(i)
+        linea += "  " + str(i)
     print(linea)
     print()
 
@@ -134,11 +135,10 @@ def imprime_Correg():
         j +=1
         print(linea)
     """
+    print()
     print(" -- > r calc,    r Estacion,    dif")
     linea = "{:10.4f}  {:10.4f}  -->  {:10.4f}".format(d,r,d-r)
     print(linea)
-    print()
-    print()
     """
 
 
@@ -154,13 +154,14 @@ elif platform.system() == "Windows":
 # en la segunda iteracion el error de reloj va a estar estimado, por lo cual se agrega un término
 imprime_Correg()
 
-for paso in range(1):
+for paso in range(3):
     print("--------------------------------------------------------")
     print("----> Paso: {:4d}".format(paso))
     print()
     arma_matriz()
     P = linalg.inv(C)
-    X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
+    X1 = linalg.lstsq(A, L, rcond=1e-15)
+    #X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
     #X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
     imprime_resu()
     """
@@ -169,5 +170,5 @@ for paso in range(1):
         Coord[j] += i
         j +=1
     """
-    Coord=[(Coord[i]+X1[i]) for i in range( len(Coord))]  # a more 'pythonic' way
+    Coord=[(Coord[i]+X1[0][i]) for i in range( len(Coord))]  # a more 'pythonic' way
     imprime_Correg()
