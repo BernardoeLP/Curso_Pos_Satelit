@@ -1,4 +1,7 @@
-""" Practica 2 """
+""" Practica 2-e
+    para el punto e) se agrega la corrección del reloj del satélite
+    4ta. columna de las coord. precisas de cada satélite
+"""
 # pylint: disable= C0103, C0206, C0301, C0209, W0105, W0602, W0603, W0621
 
 import os
@@ -38,24 +41,29 @@ Precisas  ={          # Efemérides Precisas [Km] , [us]
 "28" : [-5895.039751,  14576.928529, 21538.074040,  14.267922]
 }
 
-Estacion = [          # Coord Estación [m]
+Estacion = [          # Coord. precisas de la Estación [m]
     3370658.6942,     # X
     711877.0150,      # Y
     5349786.8637]     # Z
 
-# Estacion inicial, agregar una diferencia
 
-
+# Para tomar como coordenadas a-priori de la estacion.
+#    se le agrega una diferencia a las precisas
 Coord = [(i+(random()-0.5)*5000) for i in Estacion]
 #Coord = Estacion
+
+# en la segunda iteracion el error de reloj va a estar estimado,
+# para lo cual se va a necesitar agregar un elemento
+# al vector posición
 Coord.append(0)
-# print(Coord)
 
 
 def arma_matriz():
-    """     se puede poner c * Delta_t en vez de C, así
-            los resultados dan en Distancia, en vez de Delta_t
-            entonces en vez de c, pongo todos unos, pues la incógnita incluye a c
+    """     al armar la matriz de diseño se puede poner c * Delta_t en la
+            4ta. columna en vez de C, así los resultados 
+            dan en Distancia, en lugar de Delta_t.
+            Para eso, pongo todos unos en vez de c,
+            así la incógnita incluye a c y quedan números más manejables
     """
     global L
     global A
@@ -74,7 +82,7 @@ def arma_matriz():
 
         A.append(fila)
         # diferencia Observado - Calculado
-        err = PD[st] - ρ + float(Coord[3]) + c * s[3] / 1E6
+        err = PD[st] - ρ + float(Coord[3]) + c * s[3] / 1E6  # Si s[3] > 0 el satélite atrasa con respecto a GPS time, entonces "sumo" error en distancia?
         L.append(err)
         linea_C =[0 for i in range(cant_sat)]
         #linea_C[j]= ρ - float(Coord[3]) + c * s[3] / 1E6 - sqrt(Coord[0]*Coord[0]+Coord[1]*Coord[1]+Coord[2]*Coord[2])
@@ -139,7 +147,9 @@ def imprime_Correg():
         j +=1
         print(linea)
 
-
+############################### -  -  -  -  -  -  -  -  -  -  -  -  -
+#   I N I C I O    -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+############################### -  -  -  -  -  -  -  -  -  -  -  -  -
 
 if platform.system() == "Linux":
     # import readchar # type: ignore
@@ -149,9 +159,7 @@ elif platform.system() == "Windows":
     os.system('cls')
 
 
-# en la segunda iteracion el error de reloj va a estar estimado, por lo cual se agrega un término
-imprime_Correg()
-
+imprime_Correg()   # Primero muestra la condición inicial desde donde partimos
 for paso in range(3):
     print("--------------------------------------------------------")
     print("----> Paso: {:4d}".format(paso))
