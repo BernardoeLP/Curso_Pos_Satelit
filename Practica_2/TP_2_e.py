@@ -127,14 +127,15 @@ def imprime_resu():
     """
     print(" - - - - - - - - - -")
     print("Diferencias Calculadas para corregir las coordenadas")
+    print("           X                   Y                   Z                   t")
     linea =""
     for i in X1:
         linea += "{:20.16f}  ".format(i)
     print(linea)
     dift = list(X1[:3])
-    print("\nModulo de la diferencia calculada: {:20.16f} m".format(linalg.norm(dift)))
+    print("\nMódulo de la corrección calculada: {:20.16f} m".format(linalg.norm(dift)))
     dift.append(X1[3]*c)
-    print("Modulo de la diferencia calculada              incluyendo el reloj: {:10.6f} m\n".format(linalg.norm(dift)))
+    print("Módulo de la corrección calculada\n              incluyendo el reloj: {:10.6f} m\n".format(linalg.norm(dift)))
     print(" - - - - - - - - - -\n")
 
 def imprime_Correg():
