@@ -87,7 +87,7 @@ def imprime_resu():
 
     print("\nObservado- calculado\n")
     for dif in L:
-        print (dif)
+        print("{:15.6f}  ".format(dif))
     print()
 
     """
@@ -96,18 +96,19 @@ def imprime_resu():
     print()
     """
 
-    print("\n\nMatriz de diseño\n")
+    print("\nMatriz de diseño\n")
 
     for i in range(cant_sat):
         linea =""
         for i in A[i]:
             if i == int(i):
-                linea += "{:10d}  ".format(i)
+                linea += "{:5d}  ".format(i)
             else:
                 linea += "{:20.16f}  ".format(i)
         print(linea)
 
     print("\n")
+    """
     print()
     print("Coord Calculada")
     linea =""
@@ -115,7 +116,7 @@ def imprime_resu():
         linea += "{:20.16f}  ".format(i)
     print(linea)
     print()
-
+    """
     print("Delta X Calculada")
     linea =""
     for i in X1:
@@ -127,14 +128,14 @@ def imprime_Correg():
     """ Imprime una vez recalculado"""
     print("Coord Corregida,    Exacta,                 Diferencia (Calculada - Exacta)")
     j = 0
-    Var = 0
+    acu = 0
     for i in Coord:
         if j<3:
-            linea = "{:15.5f}  {:15.5f}  -->{:15.5f}".format(i,Estacion[j],i-Estacion[j])
-            Var += (i-Estacion[j])*(i-Estacion[j])
+            linea = "{:15.5f}  {:15.5f}  -->{:15.5f} m".format(i,Estacion[j],i-Estacion[j])
+            acu += (i-Estacion[j])*(i-Estacion[j])
         else:
-            linea = "\n Stdev: {:15.5f}\n".format(sqrt(Var/j))
-            linea += "\n c * Delta_t: {:15.5f}\n".format(i)
+            linea = "\n Dif. entre sitios: {:15.5f} m\n".format(sqrt(acu))
+            linea += "\n Delta_t: {:20.10f} useg\n".format(i/c*1E6)
         j +=1
         print(linea)
 
