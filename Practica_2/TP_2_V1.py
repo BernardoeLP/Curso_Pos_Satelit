@@ -111,16 +111,17 @@ def imprime_resu():
     print(linea)
     print()
     """
-    print("Delta X Calculada")
+    print("Diferencias Calculadas")
     linea =""
     for i in X1:
         linea += "{:20.16f}  ".format(i)
     print(linea)
+    print("Modulo de la diferencia: {:15.4f} m".format(linalg.norm(X1[:3])))
     print()
 
 def imprime_Correg():
     """ Imprime una vez recalculado"""
-    print("Coord Corregida,    Exacta,                 Diferencia (Calculada - Exacta)")
+    print("Coord Corregida,    Exacta,           Diferencia (Calculada - Exacta)")
     j = 0
     acu = 0
     for i in Coord:

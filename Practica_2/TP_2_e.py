@@ -125,12 +125,17 @@ def imprime_resu():
     print(linea)
     print()
     """
-    print("Delta X Calculada")
+    print(" - - - - - - - - - -")
+    print("Diferencias Calculadas para corregir las coordenadas")
     linea =""
     for i in X1:
         linea += "{:20.16f}  ".format(i)
     print(linea)
-    print()
+    dift = list(X1[:3])
+    print("\nModulo de la diferencia calculada: {:20.16f} m".format(linalg.norm(dift)))
+    dift.append(X1[3]*c)
+    print("Modulo de la diferencia calculada              incluyendo el reloj: {:10.6f} m\n".format(linalg.norm(dift)))
+    print(" - - - - - - - - - -\n")
 
 def imprime_Correg():
     """ Imprime una vez recalculado"""
@@ -143,7 +148,7 @@ def imprime_Correg():
             acu += (i-Estacion[j])*(i-Estacion[j])
         else:
             linea = "\n Dif. entre sitios: {:15.5f} m\n".format(sqrt(acu))
-            linea += "\n Delta_t: {:20.10f} useg\n".format(i/c*1E6)
+            linea += " Delta_t:           {:15.5f} useg\n\n".format(i/c*1E6)
         j +=1
         print(linea)
 

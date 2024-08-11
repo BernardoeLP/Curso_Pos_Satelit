@@ -113,11 +113,12 @@ def imprime_resu():
     print(linea)
     print()
     """
-    print("Delta X Calculada")
+    print("Diferencias Calculadas")
     linea =""
     for i in X1[0]:
         linea += "{:20.16f}  ".format(i)
     print(linea)
+    print("Modulo de la diferencia: {:15.4f} m".format(linalg.norm(X1[0][:3])))
     print()
 
 def imprime_Correg():
