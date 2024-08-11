@@ -73,9 +73,12 @@ def arma_matriz():
         fila = [dX/ρ,dY/ρ,dZ/ρ,1]  # opcion con incognita c * Delta_t
 
         A.append(fila)
-        L.append(PD[st] - ρ + float(Coord[3]))
+        # diferencia Observado - Calculado
+        err = PD[st] - ρ + float(Coord[3]) + c * s[3] / 1E6
+        L.append(err)
         linea_C =[0 for i in range(cant_sat)]
-        linea_C[j]= ρ - float(Coord[3]) - sqrt(Coord[0]*Coord[0]+Coord[1]*Coord[1]+Coord[2]*Coord[2])
+        #linea_C[j]= ρ - float(Coord[3]) + c * s[3] / 1E6 - sqrt(Coord[0]*Coord[0]+Coord[1]*Coord[1]+Coord[2]*Coord[2])
+        linea_C[j]= err * err
         j +=1
         C.append(linea_C)
 
@@ -86,11 +89,13 @@ def imprime_resu():
     for dif in L:
         print (dif)
     print()
+
     """
     for linea in P:
         print(linea)
     print()
     """
+
     print("\n\nMatriz de diseño\n")
 
     for i in range(cant_sat):
@@ -121,12 +126,8 @@ def imprime_resu():
 def imprime_Correg():
     """ Imprime una vez recalculado"""
     print("Coord Corregida,    Exacta,                 Diferencia (Calculada - Exacta)")
-    #linea =""
-    r = linalg.norm(Estacion)
-    c = [Coord[i] for i in range(len(Coord)-1)]
-    d = linalg.norm(c)
-    Var = 0
     j = 0
+    Var = 0
     for i in Coord:
         if j<3:
             linea = "{:15.5f}  {:15.5f}  -->{:15.5f}".format(i,Estacion[j],i-Estacion[j])
@@ -136,13 +137,6 @@ def imprime_Correg():
             linea += "\n c * Delta_t: {:15.5f}\n".format(i)
         j +=1
         print(linea)
-    """
-    print(" -- > r calc,    r Estacion,    dif")
-    linea = "{:10.4f}  {:10.4f}  -->  {:10.4f}".format(d,r,d-r)
-    print(linea)
-    print()
-    print()
-    """
 
 
 
@@ -157,7 +151,7 @@ elif platform.system() == "Windows":
 # en la segunda iteracion el error de reloj va a estar estimado, por lo cual se agrega un término
 imprime_Correg()
 
-for paso in range(5):
+for paso in range(3):
     print("--------------------------------------------------------")
     print("----> Paso: {:4d}".format(paso))
     print()
@@ -166,11 +160,8 @@ for paso in range(5):
     #X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
     X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
     imprime_resu()
-    """
-    j = 0
-    for i in X1:
-        Coord[j] += i
-        j +=1
-    """
     Coord=[(Coord[i] - X1[i]) for i in range( len(Coord))]  # a more 'pythonic' way
     imprime_Correg()
+
+    #Cxyz = linalg.inv(transpose(A) @ P @ A)
+    #print(Cxyz)

@@ -6,7 +6,7 @@ import platform
 
 from math import sqrt
 from random import random
-from numpy import transpose, linalg
+from numpy import linalg
 
 c = 299792458         # m/s  de ITRF
 
@@ -59,11 +59,8 @@ def arma_matriz():
     """
     global L
     global A
-    global C
     L = []
     A = []
-    C = []
-    j = 0
     for st in Precisas:
         s= Precisas[st]
         dX = s[0] * 1000 - Coord[0]
@@ -74,10 +71,6 @@ def arma_matriz():
 
         A.append(fila)
         L.append(PD[st] - ρ + float(Coord[3]))
-        linea_C =[0 for i in range(cant_sat)]
-        linea_C[j]= ρ - float(Coord[3]) - sqrt(Coord[0]*Coord[0]+Coord[1]*Coord[1]+Coord[2]*Coord[2])
-        j +=1
-        C.append(linea_C)
 
 def imprime_resu():
     """Imprime resultados parciales"""
@@ -114,7 +107,6 @@ def imprime_resu():
     print("Delta X Calculada")
     linea =""
     for i in X1[0]:
-        #linea += "{:20.16f}  ".format(i)
         linea += "  " + str(i)
     print(linea)
     print()
@@ -122,10 +114,6 @@ def imprime_resu():
 def imprime_Correg():
     """ Imprime una vez recalculado"""
     print("Coord Corregida,    Exacta,                 Diferencia (Calculada - Exacta)")
-    #linea =""
-    r = linalg.norm(Estacion)
-    c = [Coord[i] for i in range(len(Coord)-1)]
-    d = linalg.norm(c)
     j = 0
     for i in Coord:
         if j<3:
@@ -134,12 +122,6 @@ def imprime_Correg():
             linea = "\n c * Delta_t: {:15.5f}\n".format(i)
         j +=1
         print(linea)
-    """
-    print()
-    print(" -- > r calc,    r Estacion,    dif")
-    linea = "{:10.4f}  {:10.4f}  -->  {:10.4f}".format(d,r,d-r)
-    print(linea)
-    """
 
 
 
@@ -159,16 +141,7 @@ for paso in range(3):
     print("----> Paso: {:4d}".format(paso))
     print()
     arma_matriz()
-    P = linalg.inv(C)
     X1 = linalg.lstsq(A, L, rcond=1e-15)
-    #X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
-    #X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
     imprime_resu()
-    """
-    j = 0
-    for i in X1:
-        Coord[j] += i
-        j +=1
-    """
     Coord=[(Coord[i]-X1[0][i]) for i in range( len(Coord))]  # a more 'pythonic' way
     imprime_Correg()
