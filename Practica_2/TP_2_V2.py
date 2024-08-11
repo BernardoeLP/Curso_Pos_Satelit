@@ -123,7 +123,7 @@ def imprime_resu():
 
 def imprime_Correg():
     """ Imprime una vez recalculado"""
-    print("Coord Corregida,    Exacta,                 Diferencia (Calculada - Exacta)")
+    print("Coord Corregida,    Precisa,                Diferencia (Calculada - Precisa)")
     j = 0
     acu = 0
     for i in Coord:
