@@ -1,4 +1,8 @@
-""" Practica 2 """
+""" Practica 2  
+    desde el punto a) al d)
+    --> esta versión 2 utiliza linalg.lstsq en vez de multilicar las matrices <--
+
+"""
 # pylint: disable= C0103, C0206, C0301, C0209, W0105, W0602, W0603, W0621
 
 import os
@@ -12,8 +16,6 @@ c = 299792458         # m/s  de ITRF
 
 L = []
 A = []
-C = []
-
 
 PD = {                # PseudoDist [m]
 "28": 23334619.807,
@@ -38,24 +40,29 @@ Precisas  ={          # Efemérides Precisas [Km] , [us]
 "28" : [-5895.039751,  14576.928529, 21538.074040,  14.267922]
 }
 
-Estacion = [          # Coord Estación [m]
+Estacion = [          # Coord. precisas de la Estación [m]
     3370658.6942,     # X
     711877.0150,      # Y
     5349786.8637]     # Z
 
-# Estacion inicial, agregar una diferencia
 
-
+# Para tomar como coordenadas a-priori de la estacion.
+#    se le agrega una diferencia a las precisas
 Coord = [(i+(random()-0.5)*5000) for i in Estacion]
 #Coord = Estacion
+
+# en la segunda iteracion el error de reloj va a estar estimado,
+# para lo cual se va a necesitar agregar un elemento
+# al vector posición
 Coord.append(0)
-# print(Coord)
 
 
 def arma_matriz():
-    """     se puede poner c * Delta_t en vez de C, así
-            los resultados dan en Distancia, en vez de Delta_t
-            entonces en vez de c, pongo todos unos, pues la incógnita incluye a c
+    """     al armar la matriz de diseño se puede poner c * Delta_t en la
+            4ta. columna en vez de C, así los resultados 
+            dan en Distancia, en lugar de Delta_t.
+            Para eso, pongo todos unos en vez de c,
+            así la incógnita incluye a c y quedan números más manejables
     """
     global L
     global A
@@ -68,34 +75,36 @@ def arma_matriz():
         dZ = s[2] * 1000 - Coord[2]
         ρ = sqrt(dX*dX+dY*dY+dZ*dZ)
         fila = [dX/ρ,dY/ρ,dZ/ρ,1]  # opcion con incognita c * Delta_t
-
         A.append(fila)
+
+        # diferencia Observado - Calculado
         L.append(PD[st] - ρ + float(Coord[3]))
 
 def imprime_resu():
     """Imprime resultados parciales"""
-    """
-    print("\nObservado- calculado\n")
-    for dif in L:
-        print (dif)
-    print()
 
+    print("\nObservado- calculado")
+    for dif in L:
+        print("{:15.6f}  ".format(dif))
+    print()
+    """
     for linea in P:
         print(linea)
     print()
-
-    print("\n\nMatriz de diseño\n")
+    """
+    print("\nMatriz de diseño")
 
     for i in range(cant_sat):
         linea =""
         for i in A[i]:
             if i == int(i):
-                linea += "{:10d}  ".format(i)
+                linea += "{:5d}  ".format(i)
             else:
                 linea += "{:20.16f}  ".format(i)
         print(linea)
-    """
+
     print("\n")
+    """
     print()
     print("Coord Calculada")
     linea =""
@@ -103,11 +112,11 @@ def imprime_resu():
         linea += "{:20.16f}  ".format(i)
     print(linea)
     print()
-
+    """
     print("Delta X Calculada")
     linea =""
     for i in X1[0]:
-        linea += "  " + str(i)
+        linea += "{:20.16f}  ".format(i)
     print(linea)
     print()
 
@@ -115,15 +124,20 @@ def imprime_Correg():
     """ Imprime una vez recalculado"""
     print("Coord Corregida,    Exacta,                 Diferencia (Calculada - Exacta)")
     j = 0
+    acu = 0
     for i in Coord:
         if j<3:
-            linea = "{:15.5f}  {:15.5f}  -->{:15.5f}".format(i,Estacion[j],i-Estacion[j])
+            linea = "{:15.5f}  {:15.5f}  -->{:15.5f} m".format(i,Estacion[j],i-Estacion[j])
+            acu += (i-Estacion[j])*(i-Estacion[j])
         else:
-            linea = "\n c * Delta_t: {:15.5f}\n".format(i)
+            linea = "\n Dif. entre sitios: {:15.5f} m --> {:15.5f} Km\n".format(sqrt(acu),sqrt(acu)/1000)
+            linea += "\n Delta_t: {:20.10f} useg\n".format(i/c*1E6)
         j +=1
         print(linea)
 
-
+############################### -  -  -  -  -  -  -  -  -  -  -  -  -
+#   I N I C I O    -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+############################### -  -  -  -  -  -  -  -  -  -  -  -  -
 
 if platform.system() == "Linux":
     # import readchar # type: ignore
@@ -132,10 +146,7 @@ elif platform.system() == "Windows":
     # import msvcrt   # type: ignore
     os.system('cls')
 
-
-# en la segunda iteracion el error de reloj va a estar estimado, por lo cual se agrega un término
-imprime_Correg()
-
+imprime_Correg()   # Primero muestra la condición inicial desde donde partimos
 for paso in range(3):
     print("--------------------------------------------------------")
     print("----> Paso: {:4d}".format(paso))
