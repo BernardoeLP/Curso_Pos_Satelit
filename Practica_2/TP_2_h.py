@@ -323,6 +323,26 @@ def arma_matriz():
         j +=1
         C.append(linea_C)
 
+def imprime_dif_sat():
+
+    for s in Calculadas:
+        print("\nSat: ",s)
+        linea1 =  " Calculadas : "
+        linea2 =  " Precisas   : "
+        linea3 =  " Diferencia : "
+        mod = 0
+        for j in range(3):
+            linea1 +="  {:15.5f} m".format(Calculadas[s][j])
+            linea2 +="  {:15.5f} m".format(Precisas[s][j]*1000)
+            d = Calculadas[s][j]-Precisas[s][j]*1000
+            linea3 +="  {:15.5f} m".format(d)
+            mod += d * d
+        print(linea1)
+        print(linea2)
+        print(linea3)
+        print("  Módulo de la diferencia: {:15.5f} m".format(sqrt(mod)))
+    return
+
 def imprime_resu():
     """Imprime resultados parciales"""
 
@@ -418,6 +438,11 @@ tobs_seg = int((tobs-tGPS0).total_seconds())
 #    para usarlas en lugar de las precisas
 Calculadas = coord_obs()
 
+# Muestra las diferencias entrre las coordendas precisas del satélite
+# al instante de observación y las calculadas al instante de emisión
+imprime_dif_sat()
+
+print("\n\n--------------------------------------------------------")
 
 imprime_Correg()   # Primero muestra la condición inicial desde donde partimos
 for paso in range(3):
