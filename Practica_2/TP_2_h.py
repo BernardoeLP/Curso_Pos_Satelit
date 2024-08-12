@@ -301,14 +301,6 @@ def arma_matriz():
     j = 0
     for st in Calculadas:
         s= Calculadas[st]
-        """
-        dX = s[0] * 1000 - Coord[0]
-        dY = s[1] * 1000 - Coord[1]
-        dZ = s[2] * 1000 - Coord[2]
-        dX = s[0] - Coord[0]
-        dY = s[1] - Coord[1]
-        dZ = s[2] - Coord[2]
-        """
         dX = Coord[0] - s[0]
         dY = Coord[1] - s[1]
         dZ = Coord[2] - s[2]

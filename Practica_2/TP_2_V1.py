@@ -68,9 +68,9 @@ def arma_matriz():
     A = []
     for st in Precisas:
         s= Precisas[st]
-        dX = s[0] * 1000 - Coord[0]
-        dY = s[1] * 1000 - Coord[1]
-        dZ = s[2] * 1000 - Coord[2]
+        dX = Coord[0] - s[0] * 1000
+        dY = Coord[1] - s[1] * 1000
+        dZ = Coord[2] - s[2] * 1000
         ρ = sqrt(dX*dX+dY*dY+dZ*dZ)
         fila = [dX/ρ,dY/ρ,dZ/ρ,1]  # opcion con incognita c * Delta_t
         A.append(fila)
@@ -164,5 +164,5 @@ for paso in range(3):
         Coord[j] += i
         j +=1
     """
-    Coord=[(Coord[i] - X1[i]) for i in range( len(Coord))]  # a more 'pythonic' way
+    Coord=[(Coord[i] + X1[i]) for i in range( len(Coord))]  # a more 'pythonic' way
     imprime_Correg()
