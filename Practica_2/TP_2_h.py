@@ -15,7 +15,7 @@ import platform
 from math import sin, cos, tan, atan, sqrt, acos, pi
 from datetime import datetime, timedelta
 from random import random
-from numpy import  matmul, transpose, linalg, dot
+from numpy import  matmul, transpose, linalg, dot, std
 
 c = 299792458         # m/s  de ITRF
 μ = 3.986005E14 # m3/s2  Earth gravitational constant
@@ -305,10 +305,13 @@ def arma_matriz():
         dX = s[0] * 1000 - Coord[0]
         dY = s[1] * 1000 - Coord[1]
         dZ = s[2] * 1000 - Coord[2]
-        """
         dX = s[0] - Coord[0]
         dY = s[1] - Coord[1]
         dZ = s[2] - Coord[2]
+        """
+        dX = Coord[0] - s[0]
+        dY = Coord[1] - s[1]
+        dZ = Coord[2] - s[2]
         ρ = sqrt(dX*dX+dY*dY+dZ*dZ)
         fila = [dX/ρ,dY/ρ,dZ/ρ,1]  # opcion con incognita c * Delta_t
 
@@ -351,6 +354,7 @@ def imprime_resu():
     for j in range(len(L)):
         print(satord[j],"  {:15.6f}  ".format(L[j]))
     print()
+    print("Dispersión:  {:8.6f}\n".format((std(L))))
 
     """
     for dif in L:
@@ -406,8 +410,9 @@ def imprime_Correg():
             linea = "{:15.5f}  {:15.5f}  -->{:15.5f} m".format(i,Estacion[j],i-Estacion[j])
             acu += (i-Estacion[j])*(i-Estacion[j])
         else:
-            linea = "\n Dif. entre sitios: {:15.5f} m\n".format(sqrt(acu))
-            linea += " Delta_t:           {:15.5f} useg\n\n".format(i/c*1E6)
+            linea =  "\n Dif. entre sitios: {:15.5f} m\n".format(sqrt(acu))
+            linea +=   " Delta_t:           {:15.5f} useg".format(i/c*1E6)
+            linea += "\n c * Delta_t:       {:15.5f} m\n".format(i)
         j +=1
         print(linea)
 
@@ -454,9 +459,9 @@ for paso in range(3):
     #X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
     X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
     imprime_resu()
-    Coord=[(Coord[i] - X1[i]) for i in range( len(Coord))]  # a more 'pythonic' way
+    Coord=[(Coord[i] + X1[i]) for i in range( len(Coord))]  # a more 'pythonic' way
     imprime_Correg()
-    print("Angulo: {:8.3f}".format(calcula_angulo_dif()))
+    print("Angulo: {:8.3f}º\n\n".format(calcula_angulo_dif()))
 
     #Cxyz = linalg.inv(transpose(A) @ P @ A)
     #print(Cxyz)

@@ -9,7 +9,7 @@ import platform
 
 from math import sqrt
 from random import random
-from numpy import transpose, linalg
+from numpy import transpose, linalg, std
 
 c = 299792458         # m/s  de ITRF
 
@@ -97,6 +97,7 @@ def imprime_resu():
     for dif in L:
         print("{:15.6f}  ".format(dif))
     print()
+    print("Dispersión:  {:8.6f}\n".format((std(L))))
 
     """
     for linea in P:
@@ -148,8 +149,9 @@ def imprime_Correg():
             linea = "{:15.5f}  {:15.5f}  -->{:15.5f} m".format(i,Estacion[j],i-Estacion[j])
             acu += (i-Estacion[j])*(i-Estacion[j])
         else:
-            linea = "\n Dif. entre sitios: {:15.5f} m\n".format(sqrt(acu))
-            linea += " Delta_t:           {:15.5f} useg\n\n".format(i/c*1E6)
+            linea =  "\n Dif. entre sitios: {:15.5f} m\n".format(sqrt(acu))
+            linea +=   " Delta_t:           {:15.5f} useg".format(i/c*1E6)
+            linea += "\n c * Delta_t:       {:15.5f} m\n\n".format(i)
         j +=1
         print(linea)
 
