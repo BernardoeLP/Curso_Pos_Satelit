@@ -25,7 +25,7 @@ satord=[]        # es un 'parche' sólo para mostrar a que satélite cooresponde
 PD = {                # PseudoDist [m]
 "28": 23334619.807,
 "13": 22586189.129,
-"01": 25167667.280,
+#"01": 25167667.280,
 "27": 20873169.266,
 "24": 23371141.291,
 "10": 21505922.486,
@@ -39,7 +39,7 @@ cant_sat = len(PD)
 
 Precisas  ={          # Efemérides Precisas [Km] , [us]
     #        X             Y              Z           clk
-"01" : [  581.886423, 25616.666528 ,  7088.545471, 169.092800],
+#"01" : [  581.886423, 25616.666528 ,  7088.545471, 169.092800],
 "08" : [22018.953984,  2878.718252 , 14451.124018,   9.709180],
 "10" : [10103.948910, -10925.429662, 22009.912003,   1.148951],
 "13" : [ 7525.432597,  20488.591201, 15216.097471,  -0.655216],
@@ -51,7 +51,7 @@ Precisas  ={          # Efemérides Precisas [Km] , [us]
 Delta_ant = {          # Corrección de centro de fase de antena
 "28":  1.04280 ,       #     para cada sat [m]
 "13":  1.38950 ,
-"01":  2.38080 ,
+#"01":  2.38080 ,
 "27":  2.63340 ,
 "24":  2.60380 ,
 "10":  2.54650 ,
@@ -85,7 +85,6 @@ satlist = []
 # para hacerla fácil, anoto el tiempo correspondiente a las
 #  efemérides transmitidas que voy a usar para cada satélite ...
 tefem = {} # datetime(2001,3,19,0,0,0)
-
 
 linea = 0
 sat=""
@@ -171,10 +170,6 @@ with open(filename,encoding="utf-8") as f:
             start = True
 
 tGPS0 += timedelta(days=GPSweek*7)
-# el momento en que se realiza la observación
-tobs = datetime(2001,3,19,0,15,0)
-tobs_seg = int((tobs-tGPS0).total_seconds())
-
 
 # ------------------------------------------------------------------------------------
 #  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
@@ -228,64 +223,6 @@ def newton(fn,Df,x0,epsilon,max_iter):
     print('Exceeded maximum iterations. No solution found.')
     return None
 
-def calPos(h,inst,dt):
-    a = h["sqrtA"] * h["sqrtA"]
-    a_cubo = a*a*a
-
-    M = h["M0"] + (sqrt(μ/a_cubo)+h["Delta_n"])*dt
-
-    fE  = lambda x: M + h["e"]*sin(x) - x
-    dfE = lambda x: h["e"]*cos(x)-1
-    E = newton(fE,dfE,0,1E-8,4)
-    r0 = a * (1 - h["e"] * cos(E))
-    f = 2*atan(sqrt(1+h["e"])/sqrt(1-h["e"])*tan(E/2))
-    u0 = h["omega"] + f
-
-    Ω = h["OMEGA"] + h["OMEGA_DOT"] * dt
-    ω = h["omega"] + h["Cuc"] * cos(2*u0) + h["Cus"] * sin(2*u0)
-    r = r0 + h["Crc"] * cos(2*u0) + h["Crs"] * sin(2*u0)
-    i = h["i0"] + h["Cic"] * cos(2*u0) + h["Cis"] * sin(2*u0) + h["idot"] * dt
-    ϴ = ωe * inst
-    u = ω + f
-    """
-    print()
-    print(HoraCalc.strftime("Hora: %d/%m/%Y %H:%M:%S.%f"))
-    print("dt:",dt)
-    print("M:",M)
-    print("E:",E)
-    print("f:",f)
-    if platform.system() == "Linux":
-        respuesta = readchar.readchar().decode('utf-8')
-    elif platform.system() == "Windows":
-        respuesta = msvcrt.getch().decode('utf-8')
-
-    if respuesta =="x":
-        exit()    
-
-    """
-    r += Delta_ant
-    xyz = [ [r*cos(u), 0, 0],
-            [r*sin(u), 0, 0],
-            [    0   , 0, 0]]
-
-    R31 = [ [  cos(-Ω),sin(-Ω), 0],
-            [ -sin(-Ω),cos(-Ω), 0],
-            [      0 ,      0 , 1]]
-
-    R32 = [ [  cos(ϴ), sin(ϴ),  0],
-            [ -sin(ϴ), cos(ϴ),  0],
-            [      0 ,     0 ,  1]]
-
-    R1 =  [ [ 1,      0 ,       0],
-            [ 0, cos(-i), sin(-i)],
-            [ 0,-sin(-i), cos(-i)]]
-
-    R3R3 = matmul(R32,R31)
-    RR   = matmul(R3R3,R1)
-    xyz_prima  = matmul(RR,xyz)
-
-    return [xyz_prima[0][0],xyz_prima[1][0],xyz_prima[2][0],r,ϴ-Ω,-i]
-
 def coord_obs():
     """ Arma la matriz con coordenadas de cada satélite
          en el tiempo de observación
@@ -296,7 +233,6 @@ def coord_obs():
         for h in s:
             if h["FechaHora"]==tefem[sati]:
                 tefem_seg = int((tefem[sati]-tGPS0).total_seconds())
-                #HoraCalc = tefem + timedelta(seconds=tobs_seg-TT[sati])
                 a = h["sqrtA"] * h["sqrtA"]
                 a_cubo = a*a*a
                 # tiempo entre la efemeride transmitida y
@@ -391,7 +327,7 @@ def imprime_resu():
     print("\nObservado-calculado")
     print("SAT         Dif\n")
     for j in range(len(L)):
-            print(satord[j],"  {:15.6f}  ".format(L[j]))
+        print(satord[j],"  {:15.6f}  ".format(L[j]))
     print()
 
     """
@@ -456,38 +392,23 @@ def imprime_Correg():
 ############################### -  -  -  -  -  -  -  -  -  -  -  -  -
 #   I N I C I O    -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 ############################### -  -  -  -  -  -  -  -  -  -  -  -  -
-"""
-
-os.system('cls')
-print()
-for s in sorted(mensajes):
-    for item in mensajes[s]:
-        print(s, item["FechaHora"])
-    print('------------------------------------------------------\n')
-"""
 if platform.system() == "Linux":
     # import readchar # type: ignore
     os.system('clear')
 elif platform.system() == "Windows":
     # import msvcrt   # type: ignore
     os.system('cls')
-"""
-print(satlist)
-print()
-"""
+
+# el momento en que se realiza la observación
+tobs = datetime(2001,3,19,0,15,0)
+tobs_seg = int((tobs-tGPS0).total_seconds())
+
 # consigo las coordenadas de cada satélite
-#         en el tiempo de observación
+#    en el tiempo de emisión de la señal
+#    para usarlas en lugar de las precisas
 Calculadas = coord_obs()
-"""
-for s in Calculadas:
-    print("Calc: ",Calculadas[s])
-    print("Prec: ",Precisas[s])
-print()
 
-for s in TT:
-    print(s,tefem[s])
 
-"""
 imprime_Correg()   # Primero muestra la condición inicial desde donde partimos
 for paso in range(3):
     print("--------------------------------------------------------")
