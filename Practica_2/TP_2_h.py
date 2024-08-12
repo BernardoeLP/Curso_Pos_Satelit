@@ -1,6 +1,11 @@
-""" Practica 2-e
-    para el punto e) se agrega la corrección del reloj del satélite
-    4ta. columna de las coord. precisas de cada satélite
+""" Practica 2-h
+    para el punto h) se levantan las efemérides transmmitidas
+    del mensaje de navegación y se calcula la posición del satélite 
+    en el instante en que se transmitió la señal de donde se calcula 
+    la Pseudodistancia (presente en el diccionario PD)
+
+    De este dato se obtiene el tiempo que hay que "retrasar" el satélite 
+    para encontrar la posición desde donde se transmitió ese mensaje
 """
 # pylint: disable= C0103, C0200, C0206, C0301, C0209, W0105, W0602, W0603, W0621, W0640
 
@@ -84,8 +89,7 @@ satlist = []
 
 # para hacerla fácil, anoto el tiempo correspondiente a las
 #  efemérides transmitidas que voy a usar para cada satélite ...
-tefem = {} # datetime(2001,3,19,0,0,0)
-
+tefem = {}
 linea = 0
 sat=""
 sata=sat
@@ -168,9 +172,7 @@ with open(filename,encoding="utf-8") as f:
             #print(L_sec)
         if "END OF HEADER" in line:
             start = True
-
 tGPS0 += timedelta(days=GPSweek*7)
-
 # ------------------------------------------------------------------------------------
 #  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
 
