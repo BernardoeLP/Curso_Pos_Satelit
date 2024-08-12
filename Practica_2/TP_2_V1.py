@@ -90,6 +90,7 @@ def imprime_resu():
         print(linea)
     print()
     """
+    """
     print("\nMatriz de diseño")
 
     for i in range(cant_sat):
@@ -102,6 +103,7 @@ def imprime_resu():
         print(linea)
 
     print("\n")
+    """
     """
     print()
     print("Coord Calculada")
