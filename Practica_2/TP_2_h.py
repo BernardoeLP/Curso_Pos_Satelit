@@ -12,10 +12,10 @@
 import os
 import platform
 
-from math import sin, cos, tan, atan, sqrt
+from math import sin, cos, tan, atan, sqrt, acos, pi
 from datetime import datetime, timedelta
 from random import random
-from numpy import  matmul, transpose, linalg
+from numpy import  matmul, transpose, linalg, dot
 
 c = 299792458         # m/s  de ITRF
 μ = 3.986005E14 # m3/s2  Earth gravitational constant
@@ -30,7 +30,7 @@ satord=[]        # es un 'parche' sólo para mostrar a que satélite cooresponde
 PD = {                # PseudoDist [m]
 "28": 23334619.807,
 "13": 22586189.129,
-#"01": 25167667.280,
+"01": 25167667.280,
 "27": 20873169.266,
 "24": 23371141.291,
 "10": 21505922.486,
@@ -44,7 +44,7 @@ cant_sat = len(PD)
 
 Precisas  ={          # Efemérides Precisas [Km] , [us]
     #        X             Y              Z           clk
-#"01" : [  581.886423, 25616.666528 ,  7088.545471, 169.092800],
+"01" : [  581.886423, 25616.666528 ,  7088.545471, 169.092800],
 "08" : [22018.953984,  2878.718252 , 14451.124018,   9.709180],
 "10" : [10103.948910, -10925.429662, 22009.912003,   1.148951],
 "13" : [ 7525.432597,  20488.591201, 15216.097471,  -0.655216],
@@ -56,7 +56,7 @@ Precisas  ={          # Efemérides Precisas [Km] , [us]
 Delta_ant = {          # Corrección de centro de fase de antena
 "28":  1.04280 ,       #     para cada sat [m]
 "13":  1.38950 ,
-#"01":  2.38080 ,
+"01":  2.38080 ,
 "27":  2.63340 ,
 "24":  2.60380 ,
 "10":  2.54650 ,
@@ -391,6 +391,14 @@ def imprime_Correg():
         j +=1
         print(linea)
 
+def calcula_angulo_dif():
+    vect_dif = []
+    Coord_est = Estacion[:3]
+    for j in range(3):
+        vect_dif.append(Coord[j]-Estacion[j])
+    modprod = linalg.norm(Coord_est)*linalg.norm(vect_dif)
+    return acos(dot(Coord_est,vect_dif)/modprod)*180/pi
+
 ############################### -  -  -  -  -  -  -  -  -  -  -  -  -
 #   I N I C I O    -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 ############################### -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -423,6 +431,7 @@ for paso in range(3):
     imprime_resu()
     Coord=[(Coord[i] - X1[i]) for i in range( len(Coord))]  # a more 'pythonic' way
     imprime_Correg()
+    print("Angulo: {:8.3f}".format(calcula_angulo_dif()))
 
     #Cxyz = linalg.inv(transpose(A) @ P @ A)
     #print(Cxyz)
