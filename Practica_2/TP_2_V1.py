@@ -76,7 +76,7 @@ def arma_matriz():
         A.append(fila)
 
         # diferencia Observado - Calculado
-        L.append(PD[st] - ρ + float(Coord[3]))
+        L.append(PD[st] - ρ - float(Coord[3]))
 
 def imprime_resu():
     """Imprime resultados parciales"""

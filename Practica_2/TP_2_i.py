@@ -328,7 +328,7 @@ def arma_matriz():
 
         A.append(fila)
         # diferencia Observado - Calculado
-        err = PD[st] - ρ + float(Coord[3]) + c * s[3] / 1E6  # Si s[3] > 0 el satélite atrasa con respecto a GPS time, entonces "sumo" error en distancia?
+        err = PD[st] - ρ - float(Coord[3]) + c * s[3] / 1E6  # Si s[3] > 0 el satélite atrasa con respecto a GPS time, entonces "sumo" error en distancia?
         L.append(err)
         satord.append(st)
         linea_C =[0 for i in range(cant_sat)]
