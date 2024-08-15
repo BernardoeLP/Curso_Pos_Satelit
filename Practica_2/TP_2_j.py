@@ -10,7 +10,7 @@ import platform
 from math import sin, cos, tan, atan, sqrt, acos, pi
 from datetime import datetime, timedelta
 from random import random
-from numpy import  matmul, transpose, linalg, dot, std, subtract
+from numpy import  matmul, transpose, linalg, dot, std, subtract, cross
 
 c = 299792458          # m/s  de ITRF
 μ = 3.986005E14        # m3/s2  Earth gravitational constant
@@ -313,7 +313,10 @@ def arma_matriz():
         dY = Coord[1] - s[1]
         dZ = Coord[2] - s[2]
         ρ = sqrt(dX*dX+dY*dY+dZ*dZ)
-        ρSagnac = linalg.norm(dot(subtract(rr,rs),matmul(ωE,rr))) / c
+        #ρSagnac = linalg.norm(dot(subtract(rr,rs),cross(ωE,rr))) / c
+        ρSagnac = dot(subtract(rr,rs),cross(ωE,rr)) / c
+
+        print("Sat: {:s}  Coor. x Sagnac: {:10.5f}".format(st,ρSagnac))
 
         fila = [dX/ρ,dY/ρ,dZ/ρ,1]  # opcion con incognita c * Delta_t
         A.append(fila)
