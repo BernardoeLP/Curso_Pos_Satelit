@@ -313,7 +313,6 @@ def arma_matriz():
         dY = Coord[1] - s[1]
         dZ = Coord[2] - s[2]
         ρ = sqrt(dX*dX+dY*dY+dZ*dZ)
-        #ρSagnac = linalg.norm(dot(subtract(rr,rs),cross(ωE,rr))) / c
         ρSagnac = dot(subtract(rr,rs),cross(ωE,rr)) / c
 
         print("Sat: {:s}  Coor. x Sagnac: {:10.5f}".format(st,ρSagnac))
