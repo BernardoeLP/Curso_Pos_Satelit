@@ -43,19 +43,6 @@ f22 = f2 * f2
 fdif = f12 - f22
 PD = { s: (f12 * P2D[s][3] - f22 * P2D[s][4])/fdif for s in P2D}
 
-"""
-PD = {                # PseudoDist [m]
-"28": 23334619.807,
-"13": 22586189.129,
-"01": 25167667.280,
-"27": 20873169.266,
-"24": 23371141.291,
-"10": 21505922.486,
-"08": 20958408.428
-}
-"""
-
-
 # Obtengo tiempo de tránsito [s]
 TT = {s:PD[s]/c for s in PD}
 
@@ -332,11 +319,10 @@ def arma_matriz():
         A.append(fila)
         # diferencia Observado - Calculado
         err = PD[st] - ρ - float(Coord[3]) + c * s[3] / 1E6  - ρSagnac
-        # Si s[3] > 0 el satélite atrasa con respecto a GPS time, entonces "sumo" error en distancia?
+        # Si s[3] > 0 el satélite atrasa con respecto a GPS time, entonces "sumo" error en distancia
         L.append(err)
         satord.append(st)
         linea_C =[0 for i in range(cant_sat)]
-        #linea_C[j]= ρ - float(Coord[3]) + c * s[3] / 1E6 - sqrt(Coord[0]*Coord[0]+Coord[1]*Coord[1]+Coord[2]*Coord[2])
         linea_C[j]= err * err
         j +=1
         C.append(linea_C)
