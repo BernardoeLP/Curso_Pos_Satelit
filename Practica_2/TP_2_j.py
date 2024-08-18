@@ -453,9 +453,9 @@ imprime_dif_sat()
 print("\n\n--------------------------------------------------------")
 
 imprime_Correg()   # Primero muestra la condición inicial desde donde partimos
-for paso in range(3):
+for paso in range(5):
     print("--------------------------------------------------------")
-    print("----> Paso: {:4d}".format(paso))
+    print("----> Paso: {:4d}".format(paso+1))
     print()
     rr = Coord[:3]   # Coordenadas (x, Y, Z) calculadas de la estación
     arma_matriz()
