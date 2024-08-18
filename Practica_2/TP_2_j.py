@@ -451,15 +451,16 @@ Calculadas = coord_obs()
 imprime_dif_sat()
 
 print("\n\n--------------------------------------------------------")
-
 imprime_Correg()   # Primero muestra la condición inicial desde donde partimos
-for paso in range(5):
+
+inicio = datetime.now()
+for paso in range(500):
     print("--------------------------------------------------------")
     print("----> Paso: {:4d}".format(paso+1))
     print()
     rr = Coord[:3]   # Coordenadas (x, Y, Z) calculadas de la estación
     arma_matriz()
-    P = linalg.inv(C)
+    #P = linalg.inv(C)
     #X1 = linalg.inv(transpose(A) @ P @ A) @ transpose(A) @ P @ L
     X1 = linalg.inv(transpose(A) @ A) @ transpose(A) @ L
     imprime_resu()
@@ -469,3 +470,8 @@ for paso in range(5):
 
     #Cxyz = linalg.inv(transpose(A) @ P @ A)
     #print(Cxyz)
+
+final = datetime.now()
+tproceso=(final-inicio).total_seconds()
+print("\n------------------------------------------------------")
+print("\ntiempo de proceso: {:8.5f}seg\n\n".format(tproceso))

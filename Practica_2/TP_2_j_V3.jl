@@ -348,8 +348,9 @@ function arma_matriz()
     =#
     global C
     global satord
-    global L = []
-    global A = []
+    #global L = []
+    global L = zeros(1,cant_sat)
+    global A = zeros(Float64,4,cant_sat)
     C = []
     satord=Dict()
     j = 1
@@ -365,11 +366,13 @@ function arma_matriz()
         @printf("Sat: %s  Coor. x Sagnac: %10.5f\n",st,ρSagnac)
 
         fila = Vector{Float64}([dX/ρ,dY/ρ,dZ/ρ,1])  # opcion con incognita c * Delta_t
-        push!(A,fila)
+        #println(fila)
+        A[:,j] = fila
         # diferencia Observado - Calculado
         err = PD[st] - ρ - float(Coord[4]) + c * s[4] / 1E6  - ρSagnac
         # Si s[4] > 0 el satélite atrasa con respecto a GPS time, entonces "sumo" error en distancia
-        push!(L,err)
+        L[1,j] = err
+        #push!(L,err)
         satord[st] = err
         linea_C =[0 for i in 1:cant_sat]
         #linea_C[j]= err * err
@@ -483,10 +486,10 @@ Calculadas = coord_obs()
 # Muestra las diferencias entrre las coordendas precisas del satélite
 # al instante de observación y las calculadas al instante de emisión
 imprime_dif_sat()
-
 println("\n\n--------------------------------------------------------")
-inicio = now()
 imprime_Correg()   # Primero muestra la condición inicial desde donde partimos
+
+inicio = now()
 for paso in 1:500
     println("--------------------------------------------------------")
     println(@sprintf("----> Paso: %4d",paso))
@@ -495,18 +498,18 @@ for paso in 1:500
     arma_matriz()
 
     #P = inv(C)
-    MA = stack(A)'
-    ML = real(reshape(L, length(L), 1))
+    #MA = real(A')
+    MA = A'
+    ML = L'
     global X1 = MA\ML
     #println()
     imprime_resu()
-    global Coord=[(Coord[i] + X1[i]) for i in 1: length(Coord)] 
+    global Coord=[(Coord[i] + X1[i]) for i in eachindex(Coord)]
     imprime_Correg()
     @printf "Angulo: %8.3fº\n\n" calcula_angulo_dif()
-
 end
 
 final = now()
-tproceso=(Dates.DateTime(final) - Dates.DateTime(inicio)) / Millisecond(1)
+tproceso=(Dates.DateTime(final) - Dates.DateTime(inicio)) / Millisecond(1000)
 println("\n------------------------------------------------------")
-@printf("\ntiempo de proceso: %12.8fseg\n\n\n",tproceso)
+@printf("\ntiempo de proceso: %8.5fseg\n\n\n",tproceso)

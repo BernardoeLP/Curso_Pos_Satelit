@@ -353,6 +353,7 @@ function arma_matriz()
     C = []
     satord=Dict()
     j = 1
+    primera = true
     for st in keys(Calculadas)
         s= Calculadas[st]
         rs = s[1:3]       # Coordenadas (x, Y, Z) calculadas del satélite "st"
@@ -365,7 +366,13 @@ function arma_matriz()
         @printf("Sat: %s  Coor. x Sagnac: %10.5f\n",st,ρSagnac)
 
         fila = Vector{Float64}([dX/ρ,dY/ρ,dZ/ρ,1])  # opcion con incognita c * Delta_t
-        push!(A,fila)
+        #println(fila)
+        if primera
+            A = vcat(A, fila)
+            primera = false
+        else    
+            A = hcat(A, fila)
+        end    
         # diferencia Observado - Calculado
         err = PD[st] - ρ - float(Coord[4]) + c * s[4] / 1E6  - ρSagnac
         # Si s[4] > 0 el satélite atrasa con respecto a GPS time, entonces "sumo" error en distancia
@@ -495,12 +502,23 @@ for paso in 1:500
     arma_matriz()
 
     #P = inv(C)
-    MA = stack(A)'
+    #=
+    println("Matriz A")
+    for i in 1:7
+        for j in 1:4
+            print(A[i,j])
+            print("  ")
+        end
+        println()
+    end     
+    =#
+    #println()
+    MA = real(A')
     ML = real(reshape(L, length(L), 1))
     global X1 = MA\ML
     #println()
     imprime_resu()
-    global Coord=[(Coord[i] + X1[i]) for i in 1: length(Coord)] 
+    global Coord=[(Coord[i] + X1[i]) for i in 1: length(Coord)]
     imprime_Correg()
     @printf "Angulo: %8.3fº\n\n" calcula_angulo_dif()
 
