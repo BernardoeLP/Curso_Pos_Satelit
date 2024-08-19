@@ -464,14 +464,15 @@ end
 ############################### -  -  -  -  -  -  -  -  -  -  -  -  -
 #   I N I C I O    -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 ############################### -  -  -  -  -  -  -  -  -  -  -  -  -
-#=
-if platform.system() == "Linux":
+
+if Sys.islinux()
     # import readchar # type: ignore
-    os.system('clear')
-elif platform.system() == "Windows":
+    run(`clear`)
+elseif Sys.iswindows()
     # import msvcrt   # type: ignore
-    os.system('cls')
-=#
+    run(`cmd /C cls`)
+end
+
 # el momento en que se realiza la observación
 tobs = DateTime(2001,3,19,0,15,0)
 #tobs_seg = int((tobs-tGPS0).total_seconds())
@@ -489,8 +490,10 @@ imprime_dif_sat()
 println("\n\n--------------------------------------------------------")
 imprime_Correg()   # Primero muestra la condición inicial desde donde partimos
 
-inicio = now()
 for paso in 1:500
+    if paso == 2
+        global inicio = now()
+    end
     println("--------------------------------------------------------")
     println(@sprintf("----> Paso: %4d",paso))
     println()

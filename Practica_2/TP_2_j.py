@@ -453,8 +453,9 @@ imprime_dif_sat()
 print("\n\n--------------------------------------------------------")
 imprime_Correg()   # Primero muestra la condición inicial desde donde partimos
 
-inicio = datetime.now()
 for paso in range(500):
+    if paso == 1:
+        inicio = datetime.now()
     print("--------------------------------------------------------")
     print("----> Paso: {:4d}".format(paso+1))
     print()
