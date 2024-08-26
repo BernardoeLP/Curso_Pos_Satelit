@@ -251,7 +251,7 @@ void arma_matriz(ref NDarray a, ref NDarray l)
     """
     */
     C.Clear();
-    List<double> ll = new List<double>();
+    //List<double> ll = new List<double>();
     satord.Clear();
     //int j = 0;
     bool primera = true;
@@ -282,8 +282,8 @@ void arma_matriz(ref NDarray a, ref NDarray l)
         double err = PD[st] - ρ - Coord[3] + c * s[3] / 1E6 - ρSagnac;
         // Si s[3] > 0 el satélite atrasa con respecto a GPS time, entonces "sumo" error en distancia
 
-        //l = np.append(l,np.array(err));
-        ll.Add(err);
+        l = np.append(l,np.array(err));
+        //ll.Add(err);
         satord.Add(st);
         /*
         linea_C =[0 for i in range(cant_sat)];
@@ -292,7 +292,7 @@ void arma_matriz(ref NDarray a, ref NDarray l)
         C.append(linea_C);
         */
     }
-    l = np.array(ll.ToArray());
+    //l = np.array(ll.ToArray());
 }
 
 void imprime_dif_sat()
@@ -620,8 +620,9 @@ for (int paso=0; paso<3; paso++  )
 
     //P = linalg.inv(C)
 
-    //X1 = np.matmul(np.linalg.inv(np.matmul(np.transpose(A), A)), np.matmul(np.transpose(A), L));
+    X1 = np.matmul(np.linalg.inv(np.matmul(np.transpose(A), A)), np.matmul(np.transpose(A), L));
 
+    /*
     float rcond = float.NaN;
     var XX = np.linalg.lstsq(A, L, rcond);
     Console.WriteLine(nl+"-->> Resultados de la Regresión lineal:");
@@ -630,7 +631,7 @@ for (int paso=0; paso<3; paso++  )
     Console.WriteLine(XX.Item3);
     Console.WriteLine(XX.Item4.repr);
     X1 = XX.Item1;
-
+    */
     imprime_resu();
 
     //if (paso < 1)
