@@ -102,6 +102,12 @@ double[] Estacion = new double[4] {            // Coord. precisas de la Estació
                                     0.0         // c * Delta t
                             };
 double[] Coord = new  double[4];               // Coord. calculadas de la Estación [m]
+// Para tomar como coordenadas a-priori de la estacion.
+//    se le agrega una diferencia a las precisas
+Random random = new Random();
+for (int i = 0; i < 3; i++) Coord[i] = Estacion[i] + (random.NextDouble() - 0.5) * 5000;
+Coord[3] =0.0;
+
 double[] rr = new double[3];
 
 static double newton(Func<double, double> fn, Func<double, double> Df, double x0, double epsilon, int max_iter)
@@ -409,12 +415,6 @@ double calcula_angulo_dif()
     return Math.Acos((double) np.dot(Coord_est, vect_dif) / modprod) * 180 / Math.PI ;
 }
     
-//  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
-// Para tomar como coordenadas a-priori de la estacion.
-//    se le agrega una diferencia a las precisas
-Random random = new Random();
-for (int i = 0; i < 3; i++) Coord[i] = Estacion[i] + (random.NextDouble() - 0.5) * 5000;
-Coord[3] =0.0;
 // ------------------------------------------------------------------------------------
 // # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 //  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
@@ -546,6 +546,7 @@ tGPS0.Add(ts);
 // ------------------------------------------------------------------------------------
 //  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
 // ------------------------------------------------------------------------------------
+//  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
 
 
 // # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -601,7 +602,7 @@ imprime_Correg();   // Primero muestra la condición inicial desde donde partimo
 double Corr_reloj = 0.0;
 
 DateTime inicio = DateTime.Now;
-for (int paso=0; paso<1; paso++  )
+for (int paso=0; paso<3; paso++  )
 {
     if (paso == 1)
         inicio = DateTime.Now;
@@ -632,16 +633,16 @@ for (int paso=0; paso<1; paso++  )
 
     imprime_resu();
 
-    if (paso < 1)
-    {
+    //if (paso < 1)
+    //{
         for (int i = 0; i < 4; i++) Coord[i] = Coord[i] + (double) X1[i];
-        Corr_reloj = Coord[3];
-    }
-    else
-    {
-        for (int i = 0; i < 3; i++) Coord[i] = Coord[i] + (double) X1[i];
-        Coord[3]=Corr_reloj;
-    }
+    //    Corr_reloj = Coord[3];
+    //}
+    //else
+    //{
+    //    for (int i = 0; i < 3; i++) Coord[i] = Coord[i] + (double) X1[i];
+    //    Coord[3]=Corr_reloj;
+    //}
     Console.WriteLine(string.Format("Angulo: {0,8:F3}º",calcula_angulo_dif())+nl+nl);
     imprime_Correg();
 

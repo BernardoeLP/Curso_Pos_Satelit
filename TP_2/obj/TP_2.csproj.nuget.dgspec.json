@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\berna\\OneDrive\\Documentos\\Curso_Pos_Satelit\\TP_2\\TP_2.csproj": {}
+    "c:\\Users\\berna\\OneDrive\\Documentos\\Curso_Pos_Satelit\\TP_2\\TP_2.csproj": {}
   },
   "projects": {
-    "C:\\Users\\berna\\OneDrive\\Documentos\\Curso_Pos_Satelit\\TP_2\\TP_2.csproj": {
+    "c:\\Users\\berna\\OneDrive\\Documentos\\Curso_Pos_Satelit\\TP_2\\TP_2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\berna\\OneDrive\\Documentos\\Curso_Pos_Satelit\\TP_2\\TP_2.csproj",
+        "projectUniqueName": "c:\\Users\\berna\\OneDrive\\Documentos\\Curso_Pos_Satelit\\TP_2\\TP_2.csproj",
         "projectName": "TP_2",
-        "projectPath": "C:\\Users\\berna\\OneDrive\\Documentos\\Curso_Pos_Satelit\\TP_2\\TP_2.csproj",
+        "projectPath": "c:\\Users\\berna\\OneDrive\\Documentos\\Curso_Pos_Satelit\\TP_2\\TP_2.csproj",
         "packagesPath": "C:\\Users\\berna\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\berna\\OneDrive\\Documentos\\Curso_Pos_Satelit\\TP_2\\obj\\",
+        "outputPath": "c:\\Users\\berna\\OneDrive\\Documentos\\Curso_Pos_Satelit\\TP_2\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
