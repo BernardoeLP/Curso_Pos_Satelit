@@ -43,5 +43,5 @@
         "c:/Users/berna/.vscode/extensions/rt-thread.rt-thread-micropython-1.0.11/microExamples/code-completion"
     ],
     "dotnet.defaultSolution": "TP_2.sln"
-    //"python.linting.pylintArgs": "disable=C0103"
+
 }

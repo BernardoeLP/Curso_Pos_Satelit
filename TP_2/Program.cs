@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using Numpy;
-
+//using NumpyDotNet;
 
 string nl = Environment.NewLine;
 double c = 299792458;                           // m/s  de ITRF
@@ -184,6 +184,8 @@ Dictionary<string, double[]> coord_obs()
                 Func<double, double> fE = x => M + h.e * Math.Sin(x) - x;
                 Func<double, double> dfE = x => h.e * Math.Cos(x) - 1;
                 double E = newton(fE, dfE, 0, 1E-6, 4);
+                Console.WriteLine("Satelite: "+sati+string.Format("  E: {0,15:F10}",E));
+
                 double r0 = a * (1 - h.e * Math.Cos(E));
                 double f = 2 * Math.Atan(Math.Sqrt(1 + h.e) / Math.Sqrt(1 - h.e) * Math.Tan(E / 2));
                 double u0 = h.omega + f;
@@ -217,11 +219,11 @@ Dictionary<string, double[]> coord_obs()
                         { 0, Math.Cos(-i), Math.Sin(-i)},
                         { 0,-Math.Sin(-i), Math.Cos(-i)}};
 
-                NDarray R3R3 =  np.matmul(R32, R31);
-                NDarray RR   =  np.matmul(R3R3, R1);
+                NDarray R3R3 =  np.matmul( np.array(R32),  np.array(R31));
+                NDarray RR   =  np.matmul(R3R3,  np.array(R1));
 
 
-                NDarray xyz_prima = np.matmul(RR, xyz);
+                NDarray xyz_prima = np.matmul(RR,  np.array(xyz));
                 double x = (double)xyz_prima[0][0];
                 double y = (double)xyz_prima[1][0];
                 double z = (double)xyz_prima[2][0];
@@ -243,6 +245,7 @@ void arma_matriz(ref NDarray a, ref NDarray l)
     """
     */
     C.Clear();
+    List<double> ll = new List<double>();
     satord.Clear();
     //int j = 0;
     bool primera = true;
@@ -258,7 +261,7 @@ void arma_matriz(ref NDarray a, ref NDarray l)
 
         Console.WriteLine(string.Format("Sat: {0:s}  Coor. x Sagnac: {1,10:F5}", st, ρSagnac));
 
-        double[] fila = { dX / ρ, dY / ρ, dZ / ρ, 1 };  // opcion con incognita c * Delta_t
+        double[] fila = new double[4]{ (dX / ρ), (dY / ρ), (dZ / ρ), 1.0 };  // opcion con incognita c * Delta_t
 
         NDarray d = np.array(fila);
         if (primera)
@@ -267,13 +270,14 @@ void arma_matriz(ref NDarray a, ref NDarray l)
             primera = false;
         }
         else
-            a = np.vstack(a, np.array(fila));
+            a = np.vstack( a, np.array(fila));
 
         // diferencia Observado - Calculado
         double err = PD[st] - ρ - Coord[3] + c * s[3] / 1E6 - ρSagnac;
         // Si s[3] > 0 el satélite atrasa con respecto a GPS time, entonces "sumo" error en distancia
 
-        l = np.append(l,np.array(err));
+        //l = np.append(l,np.array(err));
+        ll.Add(err);
         satord.Add(st);
         /*
         linea_C =[0 for i in range(cant_sat)];
@@ -282,6 +286,7 @@ void arma_matriz(ref NDarray a, ref NDarray l)
         C.append(linea_C);
         */
     }
+    l = np.array(ll.ToArray());
 }
 
 void imprime_dif_sat()
@@ -329,7 +334,7 @@ void imprime_resu()
         Console.WriteLine(linea)
     Console.WriteLine()
     */
-    /*
+    
     Console.WriteLine(nl+"Matriz de diseño"+nl);
     for (int i = 0; i < cant_sat; i++)
     {
@@ -338,7 +343,7 @@ void imprime_resu()
                 reng += string.Format("{0,20:F16}  ",A[i][j]);
         Console.WriteLine(reng);
     }
-    */
+    
     //Console.WriteLine("\n")
     /*
     Console.WriteLine()
@@ -404,12 +409,14 @@ double calcula_angulo_dif()
     return Math.Acos((double) np.dot(Coord_est, vect_dif) / modprod) * 180 / Math.PI ;
 }
     
+//  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
 // Para tomar como coordenadas a-priori de la estacion.
 //    se le agrega una diferencia a las precisas
 Random random = new Random();
 for (int i = 0; i < 3; i++) Coord[i] = Estacion[i] + (random.NextDouble() - 0.5) * 5000;
 Coord[3] =0.0;
-
+// ------------------------------------------------------------------------------------
+// # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 //  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
 // Levanto las efemérides transmitidas . . .
 // ------------------------------------------------------------------------------------
@@ -538,9 +545,10 @@ tGPS0.Add(ts);
 // tGPS0 += timedelta(days = GPSweek * 7);
 // ------------------------------------------------------------------------------------
 //  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
+// ------------------------------------------------------------------------------------
 
 
-
+// # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 
 ////////////////////////////////////////////////////////////// -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -569,6 +577,18 @@ foreach (var s in Precisas.Keys)
     Calculadas.Add(s, fila);
 }
 /**/
+/*
+Console.WriteLine("Efemerides:");
+foreach(string st in Calculadas.Keys)
+{
+    string reng =st + ": ";
+    double[] lin = Calculadas[st];
+    for (int j=0;j<lin.Length;j++)
+            reng += string.Format("{0,20:F16}  ",lin[j]);
+    Console.WriteLine(reng);
+
+}
+*/
 
 
 // Muestra las diferencias entre las coordendas precisas del satélite
@@ -578,9 +598,10 @@ imprime_dif_sat();
 Console.WriteLine(nl+nl+"--------------------------------------------------------");
 imprime_Correg();   // Primero muestra la condición inicial desde donde partimos
 
+double Corr_reloj = 0.0;
 
 DateTime inicio = DateTime.Now;
-for (int paso=0; paso<3; paso++  )
+for (int paso=0; paso<1; paso++  )
 {
     if (paso == 1)
         inicio = DateTime.Now;
@@ -598,22 +619,29 @@ for (int paso=0; paso<3; paso++  )
 
     //P = linalg.inv(C)
 
-    X1 = np.matmul(np.linalg.inv(np.matmul(np.transpose(A), A)), np.matmul(np.transpose(A), L));
+    //X1 = np.matmul(np.linalg.inv(np.matmul(np.transpose(A), A)), np.matmul(np.transpose(A), L));
 
-    //float rcond = float.NaN;
-    //var XX = np.linalg.lstsq(A, L, rcond);
-    //Console.WriteLine(XX.Item1.repr);
-    //X1 = XX.Item1;
+    float rcond = float.NaN;
+    var XX = np.linalg.lstsq(A, L, rcond);
+    Console.WriteLine(nl+"-->> Resultados de la Regresión lineal:");
+    Console.WriteLine(XX.Item1.repr);
+    Console.WriteLine(XX.Item2.repr);
+    Console.WriteLine(XX.Item3);
+    Console.WriteLine(XX.Item4.repr);
+    X1 = XX.Item1;
 
     imprime_resu();
 
-    //if (paso < 1)
+    if (paso < 1)
+    {
         for (int i = 0; i < 4; i++) Coord[i] = Coord[i] + (double) X1[i];
-    //else
-    //{
-    //    for (int i = 0; i < 3; i++) Coord[i] = Coord[i] + (double) X1[i];
-        //Coord[3]=0.0;
-    //}
+        Corr_reloj = Coord[3];
+    }
+    else
+    {
+        for (int i = 0; i < 3; i++) Coord[i] = Coord[i] + (double) X1[i];
+        Coord[3]=Corr_reloj;
+    }
     Console.WriteLine(string.Format("Angulo: {0,8:F3}º",calcula_angulo_dif())+nl+nl);
     imprime_Correg();
 
