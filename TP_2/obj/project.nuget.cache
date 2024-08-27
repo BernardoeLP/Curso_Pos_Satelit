@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "I7v2roYkXT8=",
+  "dgSpecHash": "Q03Zft3az6Q=",
   "success": true,
-  "projectFilePath": "c:\\Users\\berna\\OneDrive\\Documentos\\Curso_Pos_Satelit\\TP_2\\TP_2.csproj",
+  "projectFilePath": "C:\\Users\\berna\\OneDrive\\Documentos\\Curso_Pos_Satelit\\TP_2\\TP_2.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\berna\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\berna\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
