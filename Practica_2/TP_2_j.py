@@ -441,7 +441,10 @@ elif platform.system() == "Windows":
 # el momento en que se realiza la observación
 tobs = datetime(2001,3,19,0,15,0)
 tobs_seg = int((tobs-tGPS0).total_seconds())
-
+"""
+for s in satlist:
+    print("Satelite: {:3s} Efem. Transmitidas a las: ".format(s)+ tefem[s.replace(' ','0')].strftime("%d/%m/%Y %H:%M:%S"))
+"""
 # consigo las coordenadas de cada satélite
 #    en el tiempo de emisión de la señal
 #    para usarlas en lugar de las precisas

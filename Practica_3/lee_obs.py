@@ -15,11 +15,25 @@ GPS-BASE            SWISSTOPO                               OBSERVER / AGENCY
     28                                                      # OF SATELLITES
 
 """
+# pylint: disable= C0209, C0301
 
-from datetime import datetime
 import os
+import platform
+from datetime import datetime
 
-os.system("cls")
+
+############################### -  -  -  -  -  -  -  -  -  -  -  -  -
+#   I N I C I O    -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+############################### -  -  -  -  -  -  -  -  -  -  -  -  -
+if platform.system() == "Linux":
+    # import readchar # type: ignore
+    os.system('clear')
+elif platform.system() == "Windows":
+    # import msvcrt   # type: ignore
+    os.system('cls')
+
+
+
 filename = "Practica_3\\zimm1440.02o.txt"
 start = False
 mensajes = {}
@@ -37,21 +51,15 @@ with open(filename,encoding="utf-8") as f:
                 seg.append(useg.split('.',maxsplit=1)[0])
                 AA = line[1:3]
                 AA.replace(' ','0')
-                #print(seg)
                 #                            AA             MM             DD
                 fechaHora =  datetime(int("20"+AA),int(line[4:6]),int(line[6:9]),
                 #                       HH              mm              ss         useg
                                 int(line[9:12]),int(line[12:15]),int(seg[0]),int(seg[1]))
-                #print(fechaHora)
                 nsats_li= int(line[30:32])
                 sats_li = line[32:-1]
-                #print(sats_li)
-                #print(nsats_li,len(sats_li)/3)
                 s_list=[]
                 for i in range(nsats_li):
                     s_list.append(sats_li[i*3:i*3+3])
-                #print(s_list)
-                #print('\n')
                 for s in s_list:
                     if s not in satlist:
                         satlist.append(s)
@@ -61,8 +69,6 @@ with open(filename,encoding="utf-8") as f:
             elif line.startswith("  "):
                 linea += 1
                 sat = s_list[s_count]
-                #print("Linea: ",linea)
-                #print(line)
                 if linea==1:
                     C1 = float(line[:16])
                     P2 = float(line[16:32])
@@ -79,7 +85,6 @@ with open(filename,encoding="utf-8") as f:
 
         if "# OF SATELLITES" in line:
             N_sat = int(line[:8])
-            #print(L_sec)
         if "END OF HEADER" in line:
             start = True
 
@@ -88,9 +93,8 @@ for s in satlist:
 
 fs = open("Practica_3\\sat7.csv",'w')
 fs.write("Fecha y Hora,C1,P2,L1,L2,D1,D2\n")
-for hora in mensajes["G07"]:
-    fila = hora["FechaHora"].strftime("%d/%m/%Y %H:%M:%S.%f")+",{:15.5f},{:15.5f},{:15.5f},{:15.5f},{:15.5f},{:15.5f}\n".format(
-        hora["C1"], hora["P2"], hora["L1"], hora["L2"], hora["D1"], hora["D2"]) 
+for entrada in mensajes["G07"]:
+    fila = entrada["FechaHora"].strftime("%d/%m/%Y %H:%M:%S.%f")+",{:15.5f},{:15.5f},{:15.5f},{:15.5f},{:15.5f},{:15.5f}\n".format(
+        entrada["C1"], entrada["P2"], entrada["L1"], entrada["L2"], entrada["D1"], entrada["D2"])
     fs.write(fila)
-    #print(fila[:-1])
 fs.close()
