@@ -86,7 +86,7 @@ with open(filename,encoding="utf-8") as f:
 for s in satlist:
     print("Satélite: ",s)
 
-fs = open("Practica_3\\sat7.txt",'w')
+fs = open("Practica_3\\sat7.csv",'w')
 fs.write("Fecha y Hora,C1,P2,L1,L2,D1,D2\n")
 for hora in mensajes["G07"]:
     fila = hora["FechaHora"].strftime("%d/%m/%Y %H:%M:%S.%f")+",{:15.5f},{:15.5f},{:15.5f},{:15.5f},{:15.5f},{:15.5f}\n".format(
