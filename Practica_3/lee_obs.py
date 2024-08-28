@@ -92,7 +92,7 @@ for s in satlist:
     print("Satélite: ",s)
 
 fs = open("Practica_3\\sat7.csv",'w')
-fs.write("Fecha y Hora,C1,P2,L1,L2,D1,D2\n")
+fs.write("FechaHora,C1,P2,L1,L2,D1,D2\n")
 for entrada in mensajes["G07"]:
     fila = entrada["FechaHora"].strftime("%d/%m/%Y %H:%M:%S.%f")+",{:15.5f},{:15.5f},{:15.5f},{:15.5f},{:15.5f},{:15.5f}\n".format(
         entrada["C1"], entrada["P2"], entrada["L1"], entrada["L2"], entrada["D1"], entrada["D2"])
