@@ -3,7 +3,7 @@
 
 # pylint: disable= C0103, C0200, C0206, C0301, C0209, E0601, W0105, W0602, W0603, W0621, W0640
 """
-# pylint: E0601
+# pylint: disable= C0103, C0200, C0206, C0301, C0209, E0601, W0105, W0602, W0603, W0621, W0640
 
 import os
 import platform
@@ -72,23 +72,8 @@ def calPos(h,inst,dt):
     i = h["i0"] + h["Cic"] * cos(2*u0) + h["Cis"] * sin(2*u0) + h["idot"] * dt
     ϴ = ωe * inst
     u = ω + f
-    """
-    print()
-    print(HoraCalc.strftime("Hora: %d/%m/%Y %H:%M:%S.%f"))
-    print("dt:",dt)
-    print("M:",M)
-    print("E:",E)
-    print("f:",f)
-    if platform.system() == "Linux":
-        respuesta = readchar.readchar().decode('utf-8')
-    elif platform.system() == "Windows":
-        respuesta = msvcrt.getch().decode('utf-8')
 
-    if respuesta =="x":
-        exit()    
-
-    """
-    r += Delta_ant
+    #r += Delta_ant
     xyz = [ [r*cos(u), 0, 0],
             [r*sin(u), 0, 0],
             [    0   , 0, 0]]
@@ -137,8 +122,8 @@ tefem = {}
 linea = 0
 sat=""
 sata=sat
-with open(filename,encoding="utf-8") as f:
-    for line in f:
+with open(filename,encoding="utf-8") as fnav:
+    for line in fnav:
         if start:
             if line[5]!='.':
                 if sat != "":
@@ -225,18 +210,14 @@ tGPS0 += timedelta(days=GPSweek*7)
 for s in satlist:
     print("Satélite: ",s)
 
-"""
-"FechaHora": fechaHora,"a0": a0 ,"a1": a1,"a2": a2,
-"T0e": Toe,"GPSweek": GPS_Week,"sqrtA" : sqrtA,"e": e, "M0": M0,
-"omega":omega,"i0": i0,"OMEGA": OMEGA,"Delta_n": Delta_n,
-"idot": idot,"OMEGA_DOT": OMEGA_DOT,"Cuc": Cuc,"Cus": Cus,
-"Crc": Crc,"Crs": Crs,"Cic": Cic,"Cis": Cis
-"""
+
 fs = open("Practica_3\\sat7_nav.csv",'w')
 fs.write("FechaHora,X,Y,Z\n")
+"""
 for entrada in mensajes["G07"]:
     posicion = calPos(entrada,,)
     fila = entrada["FechaHora"].strftime("%d/%m/%Y %H:%M:%S.%f")+",{:15.5f},{:15.5f},{:15.5f},{:15.5f},{:15.5f},{:15.5f}\n".format(
         entrada["C1"], entrada["P2"], entrada["L1"], entrada["L2"], entrada["D1"], entrada["D2"])
     fs.write(fila)
+"""
 fs.close()
