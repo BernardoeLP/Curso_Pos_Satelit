@@ -1,4 +1,4 @@
-"""
+""" Practica 3
 Lee archivo RINEX de Observables:
      2              OBSERVATION DATA    G (GPS)             RINEX VERSION / TYPE
 Zimmerwald LT88                                             COMMENT

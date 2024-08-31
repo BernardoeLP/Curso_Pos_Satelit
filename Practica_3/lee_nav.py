@@ -1,5 +1,6 @@
-""" Practica 2-i
-    para el punto i) ..... ??
+""" Practica 3
+Lee archivo RINEX de Observables:    
+     2.10           N: GPS NAV DATA                         RINEX VERSION / TYPE
 
 # pylint: disable= C0103, C0200, C0206, C0301, C0209, E0601, W0105, W0602, W0603, W0621, W0640
 """
