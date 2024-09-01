@@ -128,6 +128,6 @@ for i in range(4):
     ax[i].yaxis.set_major_formatter(formatter)
     ax[i].xaxis.set_major_formatter(tformatter)
 
-fig.suptitle("TP 3 - 2y3:   L1L2 vs P2-C1 [m]",fontsize=13)
+fig.suptitle("TP 3 - 4:   L1L2 vs P2-C1 [m]",fontsize=13)
 
 plt.show()
