@@ -216,6 +216,7 @@ with open("Practica_3\\sat7.csv") as fobs:
             posicion = calPos(efemerides,epoch_seg,Delta_t)
             print(posicion)
             print()
+            #  Grabo en el archivo de posiciones del satélite:  "FechaHora, X ,Y ,Z"
             fs.write(epoch.strftime("%d/%m/%Y %H:%M:%S.%f")+",{},{},{}\n".format(float(posicion[0]),float(posicion[1]),float(posicion[2])))
         l += 1
 

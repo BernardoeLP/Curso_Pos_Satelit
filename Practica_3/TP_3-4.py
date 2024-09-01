@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import matplotlib.dates as mdates
 
+pd.options.mode.chained_assignment = None  # default='warn'
+
 c = 299792458          # m/s  de ITRF
 f0 = 10.23E6           # c/s
 f1 = 1575.42           # Mc/s
@@ -66,28 +68,53 @@ sat7["L1L2"]= c / f0 * (sat7["L1"]/154-sat7["L2"]/120)   # metros
 
 print()
 print(sat7.head())
-print('\n')
+print('\n') 
 
-"""
-time_axis = list(sat7["FechaHora"].astype('datetime64[us]'))
-dif_1 = sat7["P2-C1"].tolist()
-dif_2 = sat7["L1L2"].tolist()
-
-fig = go.Figure([go.Scatter(x=time_axis, y=dif_2,mode="markers")],layout=go.Layout(
-        title=go.layout.Title(text="TP 3-1")))
-fig.update_xaxes(title_text="Horas")
-fig.update_yaxes(title_text="P2-C1")
-fig.show()
-
-"""
-
-
+# ------------------------------------------------------------------------------------
+# Armo nuevos dataframes con los bloques contiguos
+#  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
 
 G1 = sat7[sat7["Grupo"] == 1]
+med = G1["L1L2"].mean()
+G1["L1L2-deb"] = G1["L1L2"] - med
+
+valor_med = G1["P2-C1"].mean()
+G1["P2-C1_debiased"] = G1["P2-C1"]-valor_med
+
+G1["PS3"] = G1["P2-C1_debiased"] - G1["L1L2-deb"]
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Olvidarse del grupo 2 que es muy corto...
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 G3 = sat7[sat7["Grupo"] == 3]
+med = G3["L1L2"].mean()
+G3["L1L2-deb"] = G3["L1L2"] - med
+
+valor_med = G3["P2-C1"].mean()
+G3["P2-C1_debiased"] = G3["P2-C1"]-valor_med
+
+G3["PS3"] = G3["P2-C1_debiased"] - G3["L1L2-deb"]
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 G4 = sat7[sat7["Grupo"] == 4]
+med = G4["L1L2"].mean()
+G4["L1L2-deb"] = G4["L1L2"] - med
+
+valor_med = G4["P2-C1"].mean()
+G4["P2-C1_debiased"] = G4["P2-C1"]-valor_med
+
+G4["PS3"] = G4["P2-C1_debiased"] - G4["L1L2-deb"]
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 G5 = sat7[sat7["Grupo"] == 5]
+med = G5["L1L2"].mean()
+G5["L1L2-deb"] = G5["L1L2"] - med
+
+valor_med = G5["P2-C1"].mean()
+G5["P2-C1_debiased"] = G5["P2-C1"]-valor_med
+
+G5["PS3"] = G5["P2-C1_debiased"] - G5["L1L2-deb"]
 
 
 
@@ -101,25 +128,30 @@ tformatter = mdates.DateFormatter('%H:%M')
 
 dotsize = 0.7
 
-ax[0].plot(G1["FechaHora"].astype('datetime64[us]'), G1["L1L2"], 'tab:red')
+ax[0].scatter(G1["FechaHora"].astype('datetime64[us]'), G1["PS3"], c='red', s=dotsize)
+"""
 ax1 = ax[0].twinx()
 ax1.scatter(G1["FechaHora"].astype('datetime64[us]'), G1["P2-C1"], c='green', s=dotsize)
 ax1.tick_params(axis="y", labelsize=7)
-
-ax[1].plot(G3["FechaHora"].astype('datetime64[us]'), G3["L1L2"], 'tab:green')
+"""
+ax[1].scatter(G3["FechaHora"].astype('datetime64[us]'), G3["PS3"], c='green', s=dotsize)
+"""
 ax1 = ax[1].twinx()
 ax1.scatter(G3["FechaHora"].astype('datetime64[us]'), G3["P2-C1"], c='orange', s=dotsize)
 ax1.tick_params(axis="y", labelsize=7)
-
-ax[2].plot(G4["FechaHora"].astype('datetime64[us]'), G4["L1L2"], 'tab:blue')
+"""
+ax[2].scatter(G4["FechaHora"].astype('datetime64[us]'), G4["PS3"], c='blue', s=dotsize)
+"""
 ax1 = ax[2].twinx()
 ax1.scatter(G4["FechaHora"].astype('datetime64[us]'), G4["P2-C1"], c='red', s=dotsize)
 ax1.tick_params(axis="y", labelsize=7)
-
-ax[3].plot(G5["FechaHora"].astype('datetime64[us]'), G5["L1L2"], 'tab:orange')
+"""
+ax[3].scatter(G5["FechaHora"].astype('datetime64[us]'), G5["PS3"], c='orange', s=dotsize)
+"""
 ax1 = ax[3].twinx()
 ax1.scatter(G5["FechaHora"].astype('datetime64[us]'), G5["P2-C1"], c='blue', s=dotsize)
 ax1.tick_params(axis="y", labelsize=7)
+"""
 
 for i in range(4): 
     #ax[i].set(ylabel='L1L2 [m]')
