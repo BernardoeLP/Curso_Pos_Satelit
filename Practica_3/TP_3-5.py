@@ -297,45 +297,49 @@ print("Finalizado !\n")
 #  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
 print("Ploteando . . .")
 
-fig, ax = plt.subplots(4, gridspec_kw={'hspace': 0.4})#, sharex=False, sharey=False, gridspec_kw={'hspace': 0})  # nuevo
-fig.set_size_inches(9, 6)   # w , h
+fig, ax = plt.subplots(4, gridspec_kw={'hspace': 0.3})#, sharex=False, sharey=False, gridspec_kw={'hspace': 0})  # nuevo
+fig.set_size_inches(10, 7)   # w , h
 
 #plt.rcParams['axes.grid'] = True   # nuevo
 
 formatter = ticker.FormatStrFormatter('%1.2f')
 tformatter = mdates.DateFormatter('%H:%M')
 
-dotsize = 0.7
+dotsize1 = 1
+dotsize2 = 0.7
 
-ax[0].scatter(G1["FechaHora"].astype('datetime64[us]'), G1["PS3"], c='red', s=dotsize)
+ax[0].scatter(G1["FechaHora"].astype('datetime64[us]'), G1["PS3"], c='red', s=dotsize1)
 ax1 = ax[0].twinx()
-ax1.scatter(G1["FechaHora"].astype('datetime64[us]'), G1["Elev"], c='green', s=dotsize)
+ax1.scatter(G1["FechaHora"].astype('datetime64[us]'), G1["Elev"], c='green', s=dotsize2)
 ax1.tick_params(axis="y", labelsize=7)
 
-ax[1].scatter(G3["FechaHora"].astype('datetime64[us]'), G3["PS3"], c='green', s=dotsize)
+ax[1].scatter(G3["FechaHora"].astype('datetime64[us]'), G3["PS3"], c='green', s=dotsize1)
 ax1 = ax[1].twinx()
-ax1.scatter(G3["FechaHora"].astype('datetime64[us]'), G3["Elev"], c='orange', s=dotsize)
+ax1.scatter(G3["FechaHora"].astype('datetime64[us]'), G3["Elev"], c='orange', s=dotsize2)
 ax1.tick_params(axis="y", labelsize=7)
 
-ax[2].scatter(G4["FechaHora"].astype('datetime64[us]'), G4["PS3"], c='blue', s=dotsize)
+ax[2].scatter(G4["FechaHora"].astype('datetime64[us]'), G4["PS3"], c='blue', s=dotsize1)
+ax[2].set(ylabel="P2-C1 - L1L2 [m]")
 ax1 = ax[2].twinx()
-ax1.scatter(G4["FechaHora"].astype('datetime64[us]'), G4["Elev"], c='red', s=dotsize)
+ax1.scatter(G4["FechaHora"].astype('datetime64[us]'), G4["Elev"], c='red', s=dotsize2)
 ax1.tick_params(axis="y", labelsize=7)
+ax1.set(ylabel='Elevacion [º]')
 
-ax[3].scatter(G5["FechaHora"].astype('datetime64[us]'), G5["PS3"], c='orange', s=dotsize)
+ax[3].scatter(G5["FechaHora"].astype('datetime64[us]'), G5["PS3"], c='orange', s=dotsize1)
 ax1 = ax[3].twinx()
-ax1.scatter(G5["FechaHora"].astype('datetime64[us]'), G5["Elev"], c='blue', s=dotsize)
+ax1.scatter(G5["FechaHora"].astype('datetime64[us]'), G5["Elev"], c='blue', s=dotsize2)
 ax1.tick_params(axis="y", labelsize=7)
 
 
 for i in range(4):
-    #ax[i].set(ylabel='L1L2 [m]')
     ax[i].tick_params(axis="x", labelsize=7)
     ax[i].tick_params(axis="y", labelsize=6)
     ax[i].yaxis.set_major_formatter(formatter)
     ax[i].xaxis.set_major_formatter(tformatter)
+    ax[i].axhline(0,color='black',linestyle='-')
 
-fig.suptitle("TP 3 - 4:   L1L2 vs P2-C1 [m]",fontsize=13)
+
+fig.suptitle("TP 3 - 5:   Combinación de Observables [m] vs Elevaciones [º]",fontsize=13)
 
 plt.show()
 print()
