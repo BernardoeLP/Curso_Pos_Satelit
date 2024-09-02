@@ -291,13 +291,12 @@ G5["PS3"] = G5["P2-C1_debiased"] - G5["L1L2-deb"]
 print("Finalizado !\n")
 
 
-
 # ------------------------------------------------------------------------------------
 # Ploteando . . . . .
 #  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
 print("Ploteando . . .")
 
-fig, ax = plt.subplots(4, gridspec_kw={'hspace': 0.3})#, sharex=False, sharey=False, gridspec_kw={'hspace': 0})  # nuevo
+fig, ax = plt.subplots(5, gridspec_kw={'hspace': 0.3})#, sharex=False, sharey=False, gridspec_kw={'hspace': 0})  # nuevo
 fig.set_size_inches(10, 7)   # w , h
 
 #plt.rcParams['axes.grid'] = True   # nuevo
@@ -330,13 +329,19 @@ ax1 = ax[3].twinx()
 ax1.scatter(G5["FechaHora"].astype('datetime64[us]'), G5["Elev"], c='blue', s=dotsize2)
 ax1.tick_params(axis="y", labelsize=7)
 
+ax[4].scatter(sat7["FechaHora"].astype('datetime64[us]'), sat7["P2-C1"], c='grey', s=dotsize2)
+ax1 = ax[4].twinx()
+ax1.scatter(sat7["FechaHora"].astype('datetime64[us]'), sat7["Elev"], c='blue', s=dotsize2)
+ax1.tick_params(axis="y", labelsize=7)
 
-for i in range(4):
+
+for i in range(5):
     ax[i].tick_params(axis="x", labelsize=7)
     ax[i].tick_params(axis="y", labelsize=6)
     ax[i].yaxis.set_major_formatter(formatter)
     ax[i].xaxis.set_major_formatter(tformatter)
-    ax[i].axhline(0,color='black',linestyle='-')
+    if i < 4:
+        ax[i].axhline(0,color='black',linestyle='-')
 
 
 fig.suptitle("TP 3 - 5:   Combinación de Observables [m] vs Elevaciones [º]",fontsize=13)
