@@ -13,6 +13,15 @@ de cada ejercicio respecto de la elevación del satélite
 
 import os
 import platform
+
+if platform.system() == "Linux":
+    #import readchar # type: ignore
+    os.system('clear')
+elif platform.system() == "Windows":
+    #import msvcrt   # type: ignore
+    os.system('cls')
+print("\n >> Iniciando . . .")
+
 from datetime import datetime
 from math import sqrt ,sin ,cos ,asin ,acos ,atan2, pi
 import pandas as pd
@@ -133,17 +142,34 @@ def procesa():
 ############################### -  -  -  -  -  -  -  -  -  -  -  -  -
 #   I N I C I O    -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 ############################### -  -  -  -  -  -  -  -  -  -  -  -  -
-"""
-if platform.system() == "Linux":
-    #import readchar # type: ignore
-    os.system('clear')
-elif platform.system() == "Windows":
-    #import msvcrt   # type: ignore
-    os.system('cls')
-"""
+
+print("\n Coordenadas de la Estación:")
+print(Estacion)
+print()
+
+
+#
+# Importamos el archivo .csv:
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# Columnas: "FechaHora", "C1", "P2", "L1", "L2", "D1", "D2"
+# Pero dejamos sin importar los registros que no tienen valores de P2 (que tampoco tienen L2, etc.)
+#
+print("Cargando archivo de Observaciones . . .")
+sat7 = (pd.read_csv("Practica_3\\sat7.csv", parse_dates=True, dayfirst=True)).query("P2 > 1")
+
+# Elimino algunos puntos anómalos . . . .
+sat7 = sat7.drop(sat7.loc[sat7["FechaHora"] == "24/05/2002 01:37:00.002000"].index)
+sat7 = sat7.drop(sat7.loc[sat7["FechaHora"] == "24/05/2002 12:00:00.016000"].index)
+sat7 = sat7.drop(sat7.loc[sat7["FechaHora"] == "24/05/2002 12:01:00.016000"].index)
+
+print("Finalizado !\n")
+# ------------------------------------------------------------------------------------
+
+
 # Leo coordenadas del satélite 7
 # en los momentos de las observaciones
 # y las guardo en la lista "orbitas"
+print("Cargando efemérides del satélite 7 . . .")
 orbitas = []
 with open("Practica_3\\sat7_coord.csv") as forbs:
     l = 0
@@ -151,7 +177,9 @@ with open("Practica_3\\sat7_coord.csv") as forbs:
         if l>0:
             orbitas.append(l_obs[:-1].split(','))
         l +=1
+print("Finalizado !\n")
 
+#  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
 # Calcula las coordenadas gerodéticas para la estación y la matriz de transformación
 x = Estacion[0]
 y = Estacion[1]
@@ -170,35 +198,38 @@ R = [   [-sin(Ҩ)*cos(λ),-sin(Ҩ)*sin(λ),cos(Ҩ)],
         [-sin(λ)       , cos(λ)       ,0     ],
         [ cos(Ҩ)*cos(λ), cos(Ҩ)*sin(λ),sin(Ҩ)]]
 
+
+# ------------------------------------------------------------------------------------
+#  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
+# Hago la diferencia del punto 1
+sat7["P2-C1"]=sat7["P2"]-sat7["C1"]
+
+# Hago la diferencia del punto 2 (Phase)
+sat7["L1L2"]= c / f0 * (sat7["L1"]/154-sat7["L2"]/120)   # metros
+
+
+#  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
 # Obtengo las elevaciones a partir de las coordenadas del satélite
+print("Calculando elevaciones para los tiempos de las observaciones . . .")
 elevaciones = procesa()
+print("Finalizado !\n")
 
-
-#
-# Importamos el archivo .csv:
-# ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# Columnas: "FechaHora", "C1", "P2", "L1", "L2", "D1", "D2"
-# Pero dejamos sin importar los registros que no tienen valores de P2 (que tampoco tienen L2, etc.)
-#
-sat7 = (pd.read_csv("Practica_3\\sat7.csv", parse_dates=True, dayfirst=True)).query("P2 > 1")
-
-# Elimino algunos puntos anómalos . . . .
-sat7 = sat7.drop(sat7.loc[sat7["FechaHora"] == "24/05/2002 01:37:00.002000"].index)
-sat7 = sat7.drop(sat7.loc[sat7["FechaHora"] == "24/05/2002 12:00:00.016000"].index)
-sat7 = sat7.drop(sat7.loc[sat7["FechaHora"] == "24/05/2002 12:01:00.016000"].index)
 
 # ------------------------------------------------------------------------------------
 # Agrego las elevaciones al dataframe
 #  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
+print("Agregando las elevaciones al dataframe . . .")
 sat7["Elev"]=0.0
 for index, row in sat7.iterrows():
     for HoraElev in elevaciones:
         if row["FechaHora"]==HoraElev[0]:
             sat7.at[index, "Elev"] = HoraElev[1] * 180/ pi
+print("Finalizado !\n")
 
 # ------------------------------------------------------------------------------------
 # Busco los bloques contiguos
 #  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
+print("Buscando los bloques contiguos en el dataframe . . .")
 sat7["timestamp"]= pd.to_datetime(sat7["FechaHora"], dayfirst=True)
 sat7["gap"] = sat7["timestamp"].diff().dt.seconds > 70
 
@@ -208,23 +239,12 @@ for index, row in sat7.iterrows():
     if row["gap"]:
         grupo +=1
     sat7.at[index, "Grupo"] = grupo
-#  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
-
-
-# Hago la diferencia del punto 1
-sat7["P2-C1"]=sat7["P2"]-sat7["C1"]
-
-# Hago la diferencia del punto 2 (Phase)
-sat7["L1L2"]= c / f0 * (sat7["L1"]/154-sat7["L2"]/120)   # metros
-
-
-print()
-print(sat7.head())
-print('\n') 
+print("Finalizado !\n")
 
 # ------------------------------------------------------------------------------------
 # Armo nuevos dataframes con los bloques contiguos
 #  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
+print("Armando nuevos dataframes con los bloques encontrados . . .")
 
 G1 = sat7[sat7["Grupo"] == 1]
 med = G1["L1L2"].mean()
@@ -268,8 +288,14 @@ G5["P2-C1_debiased"] = G5["P2-C1"]-valor_med
 
 G5["PS3"] = G5["P2-C1_debiased"] - G5["L1L2-deb"]
 
+print("Finalizado !\n")
 
 
+
+# ------------------------------------------------------------------------------------
+# Ploteando . . . . .
+#  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
+print("Ploteando . . .")
 
 fig, ax = plt.subplots(4, gridspec_kw={'hspace': 0.4})#, sharex=False, sharey=False, gridspec_kw={'hspace': 0})  # nuevo
 fig.set_size_inches(9, 6)   # w , h
@@ -302,8 +328,6 @@ ax1.scatter(G5["FechaHora"].astype('datetime64[us]'), G5["Elev"], c='blue', s=do
 ax1.tick_params(axis="y", labelsize=7)
 
 
-
-
 for i in range(4): 
     #ax[i].set(ylabel='L1L2 [m]')
     ax[i].tick_params(axis="x", labelsize=7)
@@ -314,3 +338,4 @@ for i in range(4):
 fig.suptitle("TP 3 - 4:   L1L2 vs P2-C1 [m]",fontsize=13)
 
 plt.show()
+print()
