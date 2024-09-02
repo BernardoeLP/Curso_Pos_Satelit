@@ -9,7 +9,7 @@ de cada ejercicio respecto de la elevación del satélite
   4331297.3380   567555.6400  4633133.7180                  APPROX POSITION XYZ
 
 """
-# pylint: disable= C0209, C0301, W0603, W0611
+# pylint: disable= C0209, C0301, C0413, W0603, W0611
 
 import os
 import platform
@@ -328,7 +328,7 @@ ax1.scatter(G5["FechaHora"].astype('datetime64[us]'), G5["Elev"], c='blue', s=do
 ax1.tick_params(axis="y", labelsize=7)
 
 
-for i in range(4): 
+for i in range(4):
     #ax[i].set(ylabel='L1L2 [m]')
     ax[i].tick_params(axis="x", labelsize=7)
     ax[i].tick_params(axis="y", labelsize=6)
