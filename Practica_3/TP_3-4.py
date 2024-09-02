@@ -54,7 +54,7 @@ for index, row in sat7.iterrows():
 
 
 
-# Hago la diferencia 
+# Hago la diferencia
 sat7["P2-C1"]=sat7["P2"]-sat7["C1"]
 
 # Puedo ver cual es el valor medio o constante de la diferencia . . .
@@ -68,7 +68,7 @@ sat7["L1L2"]= c / f0 * (sat7["L1"]/154-sat7["L2"]/120)   # metros
 
 print()
 print(sat7.head())
-print('\n') 
+print('\n')
 
 # ------------------------------------------------------------------------------------
 # Armo nuevos dataframes con los bloques contiguos
@@ -153,7 +153,7 @@ ax1.scatter(G5["FechaHora"].astype('datetime64[us]'), G5["P2-C1"], c='blue', s=d
 ax1.tick_params(axis="y", labelsize=7)
 """
 
-for i in range(4): 
+for i in range(4):
     #ax[i].set(ylabel='L1L2 [m]')
     ax[i].tick_params(axis="x", labelsize=7)
     ax[i].tick_params(axis="y", labelsize=6)
@@ -163,3 +163,4 @@ for i in range(4):
 fig.suptitle("TP 3 - 4:   P2-C1 - L1L2 [m]",fontsize=13)
 
 plt.show()
+print()

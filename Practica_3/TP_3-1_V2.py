@@ -44,7 +44,7 @@ for index, row in sat7.iterrows():
 
 
 
-# Hago la diferencia 
+# Hago la diferencia
 sat7["P2-C1"]=sat7["P2"]-sat7["C1"]
 
 # Puedo ver cual es el valor medio o constante de la diferencia . . .
@@ -99,3 +99,4 @@ for i in range(5):
 fig.suptitle("TP 3 - 1   P2-C1 [m]",fontsize=13)
 
 plt.show()
+print()

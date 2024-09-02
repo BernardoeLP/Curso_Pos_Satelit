@@ -56,7 +56,7 @@ print("Finalizado !\n")
 
 
 
-# Hago la diferencia 
+# Hago la diferencia
 sat7["P2-C1"]=sat7["P2"]-sat7["C1"]
 
 # Puedo ver cual es el valor medio o constante de la diferencia . . .
@@ -131,7 +131,7 @@ ax1 = ax[3].twinx()
 ax1.scatter(G5["FechaHora"].astype('datetime64[us]'), G5["P2-C1"], c='blue', s=dotsize)
 ax1.tick_params(axis="y", labelsize=7)
 
-for i in range(4): 
+for i in range(4):
     #ax[i].set(ylabel='L1L2 [m]')
     ax[i].tick_params(axis="x", labelsize=7)
     ax[i].tick_params(axis="y", labelsize=6)
@@ -141,3 +141,4 @@ for i in range(4):
 fig.suptitle("TP 3 - 2y3:   L1L2 vs P2-C1 [m]",fontsize=13)
 
 plt.show()
+print()
