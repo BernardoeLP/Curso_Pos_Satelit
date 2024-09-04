@@ -68,8 +68,8 @@ G5 = sat7[sat7["Grupo"] == 5]
 
 
 
-fig, ax = plt.subplots(5, sharex=False, sharey=False, gridspec_kw={'hspace': 0.4})  # nuevo
-#fig.set_size_inches(8, 6)   # w , h
+fig, ax = plt.subplots(5, sharex=False, sharey=False, gridspec_kw={'hspace': 0.3})  # nuevo
+fig.set_size_inches(10, 7)   # w , h
 
 #plt.style.use("fivethirtyeight")
 #plt.rcParams['axes.grid'] = True   # nuevo

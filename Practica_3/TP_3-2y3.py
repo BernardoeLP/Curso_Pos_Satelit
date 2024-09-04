@@ -99,15 +99,15 @@ print("Finalizado !\n")
 #  / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / - / -
 print("Ploteando . . .")
 
-fig, ax = plt.subplots(4, gridspec_kw={'hspace': 0.4})#, sharex=False, sharey=False, gridspec_kw={'hspace': 0})  # nuevo
-fig.set_size_inches(9, 6)   # w , h
+fig, ax = plt.subplots(4, gridspec_kw={'hspace': 0.3})#, sharex=False, sharey=False, gridspec_kw={'hspace': 0})  # nuevo
+fig.set_size_inches(10, 7)   # w , h
 
 #plt.rcParams['axes.grid'] = True   # nuevo
 
 formatter = ticker.FormatStrFormatter('%1.2f')
 tformatter = mdates.DateFormatter('%H:%M')
 
-dotsize = 0.7
+dotsize = 0.9
 
 ax[0].plot(G1["FechaHora"].astype('datetime64[us]'), G1["L1L2"], 'tab:red')
 ax1 = ax[0].twinx()

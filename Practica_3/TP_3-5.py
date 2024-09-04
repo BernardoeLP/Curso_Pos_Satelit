@@ -341,7 +341,7 @@ for i in range(5):
     ax[i].yaxis.set_major_formatter(formatter)
     ax[i].xaxis.set_major_formatter(tformatter)
     if i < 4:
-        ax[i].axhline(0,color='black',linestyle='-')
+        ax[i].axhline(0,color='grey',linestyle='-')
 
 
 fig.suptitle("TP 3 - 5:   Combinación de Observables [m] vs Elevaciones [º]",fontsize=13)
