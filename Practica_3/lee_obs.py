@@ -36,27 +36,28 @@ elif platform.system() == "Windows":
 
 filename = "Practica_3\\zimm1440.02o.txt"
 start = False
-mensajes = {}
-satlist = []
-linea = 0
-sat=""
+mensajes = {}  # Dictionary to store messages for each satellite
+satlist = []   # List to store unique satellite identifiers
+linea = 0      # Line counter for satellite data
+sat = ""       # Current satellite identifier
 with open(filename,encoding="utf-8") as f:
     for line in f:
         if start:
             if (len(line)> 15) and (line[18]=='.'):
-                #print(line[:-1])
+                # Process the line containing satellite data
                 useg = str((float(line[16:26])-int(line[16:18]))* 1E6)
                 seg = []
                 seg.append(line[16:18].replace(' ','0'))
                 seg.append(useg.split('.',maxsplit=1)[0])
                 AA = line[1:3]
                 AA.replace(' ','0')
+                # Create a datetime object from the parsed date and time components
                 #                            AA             MM             DD
                 fechaHora =  datetime(int("20"+AA),int(line[4:6]),int(line[6:9]),
                 #                       HH              mm              ss         useg
                                 int(line[9:12]),int(line[12:15]),int(seg[0]),int(seg[1]))
-                nsats_li= int(line[30:32])
-                sats_li = line[32:-1]
+                nsats_li= int(line[30:32])  # Number of satellites in the line
+                sats_li = line[32:-1]       # Satellite identifiers in the line
                 s_list=[]
                 for i in range(nsats_li):
                     s_list.append(sats_li[i*3:i*3+3])
@@ -70,12 +71,14 @@ with open(filename,encoding="utf-8") as f:
                 linea += 1
                 sat = s_list[s_count]
                 if linea==1:
+                    # Parse the first line of satellite data
                     C1 = float(line[:16])
                     P2 = float(line[16:32])
                     L1 = float(line[32:48])
                     L2 = float(line[48:64])
                     D1 = float(line[64:-1])
                 if linea==2:
+                    # Parse the second line of satellite data and store it
                     D2 = float(line.strip())
                     mensajes[sat].append({"FechaHora": fechaHora,"C1":C1,
                                     "P2":P2,"L1":L1,"L2":L2,"D1":D1 ,"D2":D2})
@@ -84,13 +87,14 @@ with open(filename,encoding="utf-8") as f:
 
 
         if "# OF SATELLITES" in line:
-            N_sat = int(line[:8])
+            N_sat = int(line[:8])  # Number of satellites in the header
         if "END OF HEADER" in line:
-            start = True
+            start = True           # Start processing data after the header
 
 for s in satlist:
     print("Satélite: ",s)
 
+# Write the parsed data to a CSV file
 fs = open("Practica_3\\sat7.csv",'w')
 fs.write("FechaHora,C1,P2,L1,L2,D1,D2\n")
 for entrada in mensajes["G07"]:
