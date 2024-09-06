@@ -14,6 +14,10 @@ GPS-BASE            SWISSTOPO                               OBSERVER / AGENCY
   2002     5    24    23    59   30.000000                  TIME OF LAST OBS
     28                                                      # OF SATELLITES
 
+    
+
+Y graba los correspondientes al satélite "07" en un archivo ".csv"
+
 """
 # pylint: disable= C0209, C0301
 

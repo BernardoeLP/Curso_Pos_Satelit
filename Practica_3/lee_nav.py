@@ -1,8 +1,9 @@
 """ Practica 3
-Lee archivo RINEX de Observables:    
+Lee archivo RINEX de Navegación:    
      2.10           N: GPS NAV DATA                         RINEX VERSION / TYPE
 
-# pylint: disable= C0103, C0200, C0206, C0301, C0209, E0601, W0105, W0602, W0603, W0621, W0640
+Y graba las coordenadas ECEF del satélite "sati" en un archivo ".csv"
+
 """
 # pylint: disable= C0103, C0200, C0206, C0301, C0209, E0601, W0105, W0602, W0603, W0621, W0640
 
@@ -18,7 +19,7 @@ c = 299792458          # m/s  de ITRF
 ωe =   7.2921151467E-5 # radians/s Angular Velocity of the Earth
 ωE = [ 0, 0, ωe]       # Velocity of the Earth (vector)
 tGPS0 =  datetime(1980,1,6,0,0,0)
-sati = "07"
+sati = "07"            # Satelite del que quiero obtener las coordenadas
 
 def newton(fn,Df,x0,epsilon,max_iter):
     '''Approximate solution of f(x)=0 by Newton's method.
