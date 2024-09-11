@@ -73,9 +73,13 @@ print("Armando nuevos dataframes con los bloques encontrados . . .")
 G1 = sat7[sat7["Grupo"] == 1]
 med = G1["L1L2"].mean()
 G1["L1L2-deb"] = G1["L1L2"] - med
+max1izq = G1["L1L2-deb"].max()
 
 valor_med = G1["P2-C1"].mean()
 G1["P2-C1_debiased"] = G1["P2-C1"]-valor_med
+max1der = G1["P2-C1_debiased"].max()
+min1der = G1["P2-C1_debiased"].min()
+min1izq = max1izq * min1der/max1der
 
 G1["PS3"] = G1["P2-C1_debiased"] - G1["L1L2-deb"]
 
@@ -86,9 +90,13 @@ G1["PS3"] = G1["P2-C1_debiased"] - G1["L1L2-deb"]
 G3 = sat7[sat7["Grupo"] == 3]
 med = G3["L1L2"].mean()
 G3["L1L2-deb"] = G3["L1L2"] - med
+max3izq = G3["L1L2-deb"].max()
 
 valor_med = G3["P2-C1"].mean()
 G3["P2-C1_debiased"] = G3["P2-C1"]-valor_med
+max3der = G3["P2-C1_debiased"].max()
+min3der = G3["P2-C1_debiased"].min()
+min3izq = max3izq * min3der/max3der
 
 G3["PS3"] = G3["P2-C1_debiased"] - G3["L1L2-deb"]
 
@@ -129,15 +137,20 @@ formatter = ticker.FormatStrFormatter('%1.2f')
 tformatter = mdates.DateFormatter('%H:%M')
 
 dotsize = 0.9
+margen = 1.05
 
 ax[0].plot(G1["FechaHora"].astype('datetime64[us]'), G1["L1L2-deb"], 'tab:red')
+ax[0].set(ylim=(min1izq * margen, max1izq * margen))
 ax1 = ax[0].twinx()
 ax1.scatter(G1["FechaHora"].astype('datetime64[us]'), G1["P2-C1_debiased"], c='green', s=dotsize)
+ax1.set(ylim=(min1der * margen, max1der * margen))
 ax1.tick_params(axis="y", labelsize=7)
 
 ax[1].plot(G3["FechaHora"].astype('datetime64[us]'), G3["L1L2-deb"], 'tab:green')
+ax[1].set(ylim=(min3izq * margen, max3izq * margen))
 ax1 = ax[1].twinx()
 ax1.scatter(G3["FechaHora"].astype('datetime64[us]'), G3["P2-C1_debiased"], c='orange', s=dotsize)
+ax1.set(ylim=(min3der * margen, max3der * margen))
 ax1.tick_params(axis="y", labelsize=7)
 
 ax[2].plot(G4["FechaHora"].astype('datetime64[us]'), G4["L1L2-deb"], 'tab:blue')
