@@ -28,7 +28,7 @@ tabla = pd.read_csv("Practica_4\\tabla.csv")
 print(tabla)
 
 
-# Hago la diferencia 
+# Hago la diferencia
 tabla["P2-C1"]=tabla["lpg2-27-P2"]-tabla["lpg2-27-C1"]
 
 # Puedo ver cual es el valor medio o constante de la diferencia . . .
