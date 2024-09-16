@@ -1,3 +1,12 @@
+"""
+Páctica 4 Ej-1:
+
+Construya las dobles dsaterencias de todos los observables de código (C1, P1 y P2)
+combinando lpg2-lpgs y sat02-sat27, sat08-sat02, sat10-sat08 y sat28-sat10.
+
+Construya gráficos para cada observable 
+y todas las series de dobles dsaterencias en función del tiempo.
+"""
 # pylint: disable= C0209, C0301, W0611
 
 import os
@@ -25,11 +34,43 @@ elif platform.system() == "Windows":
 #
 tabla = pd.read_csv("Practica_4\\tabla.csv")
 #tabla = tabla.set_index("Seconds")
-print(tabla)
+#print(tabla)
+
+ests = ["lpg2","lpgs"]
+obss = ["C1","P1","P2"]
+# sat02-sat27, sat08-sat02, sat10-sat08 y sat28-sat10.
+dsats = { "DS1" : ["02","27"],
+          "DS2" : ["08","02"],
+          "DS3" : ["10","08"],
+          "DS4" : ["28","10"] }
+
+# Hago las 1º diferencias
+# 1º cada código para cada combinación de satélites
+
+ddif = pd.DataFrame()
+ddif["Seconds"] = tabla["Seconds"]
+for est in ests:
+    for dsat in dsats:
+        for obs in obss:
+            print(est+"-"+dsat+"-"+obs+" = "+dsats[dsat][0]+"-"+dsats[dsat][1]+" en "+obs)
+            ddif[est+"-"+dsat+"-"+obs] = tabla[est+"-"+ dsats[dsat][0] +"-"+obs]-tabla[est+"-"+ dsats[dsat][1] +"-"+obs]
+        print()
+    print()
+
+cont = 1
+graficos = []
+for dif in dsats:
+    for obs in obss:
+        columna = "DDIF{:02d}".format(cont)
+        graficos.append(columna)
+        print(columna +"= "+ests[0]+"-"+dif+"-"+obs+" menos "+ests[1]+"-"+dif+"-"+obs)
+        ddif[columna] = ddif[ests[0]+"-"+dif+"-"+obs]-ddif[ests[1]+"-"+dif+"-"+obs]
+        cont += 1
+    print()
 
 
-# Hago la diferencia
-tabla["P2-C1"]=tabla["lpg2-27-P2"]-tabla["lpg2-27-C1"]
+"""
+
 
 # Puedo ver cual es el valor medio o constante de la diferencia . . .
 valor_med = tabla["P2-C1"].mean()
@@ -39,20 +80,13 @@ valor_med = tabla["P2-C1"].mean()
 print()
 print(tabla.head())
 print('\n')
-
+"""
 time_axis = list(tabla["Seconds"].astype('datetime64[us]'))
-dif_1 = tabla["P2-C1"].tolist()
+#time_axis = list(ddif["Seconds"])
+dsat_1 = ddif[graficos[1]]
 
-fig = go.Figure([go.Scatter(x=time_axis, y=dif_1,mode="markers")],layout=go.Layout(
+fig = go.Figure([go.Scatter(x=time_axis, y=dsat_1,mode="markers")],layout=go.Layout(
         title=go.layout.Title(text="TP 3-1")))
 fig.update_xaxes(title_text="Horas")
 fig.update_yaxes(title_text="P2-C1")
 fig.show()
-
-"""
-print("x - Exit")
-if platform.system() == "Linux":
-    respuesta = readchar.readchar().decode('utf-8')
-elif platform.system() == "Windows":
-    respuesta = msvcrt.getch().decode('utf-8')
-"""
