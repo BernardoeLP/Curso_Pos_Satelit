@@ -13,6 +13,7 @@ import os
 import platform
 #from datetime import datetime
 import pandas as pd
+from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
 if platform.system() == "Linux":
@@ -62,12 +63,15 @@ graficos = []
 for dif in dsats:
     for obs in obss:
         columna = "DDIF{:02d}".format(cont)
-        graficos.append(columna)
-        print(columna +"= "+ests[0]+"-"+dif+"-"+obs+" menos "+ests[1]+"-"+dif+"-"+obs)
+        columna_desc = ests[0]+"-("+dsats[dif][0]+"-"+dsats[dif][1]+")-"+obs+" menos "+ests[1]+"-("+dsats[dif][0]+"-"+dsats[dif][1]+")-"+obs
+        entrada=[columna,columna_desc]
+        graficos.append(entrada)
+        print(columna + "= " + columna_desc)
         ddif[columna] = ddif[ests[0]+"-"+dif+"-"+obs]-ddif[ests[1]+"-"+dif+"-"+obs]
         cont += 1
     print()
 
+#print(ddif)
 
 """
 
@@ -80,13 +84,27 @@ valor_med = tabla["P2-C1"].mean()
 print()
 print(tabla.head())
 print('\n')
+
 """
+
 time_axis = list(tabla["Seconds"].astype('datetime64[us]'))
 #time_axis = list(ddif["Seconds"])
-dsat_1 = ddif[graficos[1]]
 
-fig = go.Figure([go.Scatter(x=time_axis, y=dsat_1,mode="markers")],layout=go.Layout(
-        title=go.layout.Title(text="TP 3-1")))
-fig.update_xaxes(title_text="Horas")
-fig.update_yaxes(title_text="P2-C1")
+
+fig = make_subplots(rows=12, cols=1,shared_xaxes=True,vertical_spacing=0.02)
+
+fila = 1
+for columns in graficos:
+    fig.add_trace(
+        go.Scatter(x=time_axis, y=ddif[columns[0]],mode="markers", name=columns[1]),
+        row=fila, col=1
+    )
+    fila += 1
+    """
+    fig = go.Figure([go.Scatter(x=time_axis, y=dsat_1,mode="markers")],layout=go.Layout(
+            title=go.layout.Title(text="TP 3-1")))
+    """
+    #fig.update_xaxes(title_text="Horas")
+    #fig.update_yaxes(title_text=col)
+
 fig.show()
