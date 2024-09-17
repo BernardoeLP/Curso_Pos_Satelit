@@ -87,8 +87,8 @@ print('\n')
 
 """
 
-time_axis = list(tabla["Seconds"].astype('datetime64[us]'))
-#time_axis = list(ddif["Seconds"])
+#time_axis = list(tabla["Seconds"].astype('datetime64[us]'))
+time_axis = list(ddif["Seconds"])
 
 
 fig = make_subplots(rows=12, cols=1,shared_xaxes=True,vertical_spacing=0.02)
