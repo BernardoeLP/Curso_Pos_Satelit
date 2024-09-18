@@ -12,6 +12,7 @@ y todas las series de dobles dsaterencias en función del tiempo.
 import os
 import platform
 #from datetime import datetime
+from numpy import nan
 import pandas as pd
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
@@ -73,6 +74,12 @@ for dif in dsats:
 
 #print(ddif)
 
+# Quitando los "Outliers"
+#~~~~~~~~~~~~~~~~~~~~~~~~~
+ddif.loc[ddif["DDIF02"].abs() > 10e6, "DDIF02"] = nan
+ddif.loc[ddif["DDIF05"].abs() > 10e6, "DDIF05"] = nan
+ddif.loc[ddif["DDIF08"].abs() > 10e6, "DDIF08"] = nan
+ddif.loc[ddif["DDIF11"].abs() > 10e6, "DDIF11"] = nan
 """
 
 
@@ -87,8 +94,8 @@ print('\n')
 
 """
 
-time_axis = list(tabla["Seconds"].astype('datetime64[us]'))
-#time_axis = list(ddif["Seconds"])
+#time_axis = list(tabla["Seconds"].astype('datetime64[us]'))
+time_axis = list(ddif["Seconds"])
 
 
 fig = make_subplots(rows=12, cols=1,shared_xaxes=True,vertical_spacing=0.02)

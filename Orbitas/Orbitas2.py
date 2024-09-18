@@ -1,3 +1,5 @@
+# pylint: disable= C0209, C0301, E0401, W0603, W0621
+
 import os
 from datetime import datetime
 from math import sin, cos, asin, acos, atan2, sqrt, pi
@@ -7,7 +9,7 @@ import plotly.graph_objs as go
 
 if platform.system() == "Linux":
     import readchar
-    os.system('clear')  
+    os.system('clear')
 elif platform.system() == "Windows":
     import msvcrt
     os.system('cls')
@@ -128,7 +130,7 @@ def plotea(estacion):
             mode='markers',  # sólo puntos, sin líneas
             marker=dict(size=2), # los puntos chiuquitos
             name=satname))  # este es el label de la traza
-     
+
     fig.add_trace(go.Scatter3d(x=[0],y=[0],z=[0], name=estacion, mode='markers',
                     marker=dict(color='black', size=5, sizemode='diameter'))) # dibujo la estación
     fig.show()
@@ -191,7 +193,7 @@ while 1:
     print("1 - La Plata")
     print("2 - Trelew")
     print("3 - Rio Grande")
-    #print("4 - Lat, Lon")    <--- Tarea pendiente . . . 
+    #print("4 - Lat, Lon")    <--- Tarea pendiente . . .
     print("x - Exit")
     if platform.system() == "Linux":
         respuesta = readchar.readchar().decode('utf-8')
