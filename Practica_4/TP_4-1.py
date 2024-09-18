@@ -76,10 +76,12 @@ for dif in dsats:
 
 # Quitando los "Outliers"
 #~~~~~~~~~~~~~~~~~~~~~~~~~
+
 ddif.loc[ddif["DDIF02"].abs() > 10e6, "DDIF02"] = nan
 ddif.loc[ddif["DDIF05"].abs() > 10e6, "DDIF05"] = nan
 ddif.loc[ddif["DDIF08"].abs() > 10e6, "DDIF08"] = nan
 ddif.loc[ddif["DDIF11"].abs() > 10e6, "DDIF11"] = nan
+
 """
 
 
@@ -94,8 +96,8 @@ print('\n')
 
 """
 
-#time_axis = list(tabla["Seconds"].astype('datetime64[us]'))
-time_axis = list(ddif["Seconds"])
+time_axis = list(tabla["Seconds"].astype('datetime64[s]'))
+#time_axis = list(ddif["Seconds"])
 
 
 fig = make_subplots(rows=12, cols=1,shared_xaxes=True,vertical_spacing=0.005)
