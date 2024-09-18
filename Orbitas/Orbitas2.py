@@ -118,21 +118,39 @@ def procesa(est):
 
 
 def plotea(estacion):
+    sistemas = {
+        "G" : ["GPS","darkgreen"],
+        "R" : ["Glonass","red"],
+        "E" : ["Galileo","blue"],
+        "C" : ["Beidou","gold"] ,
+        "J" : ["QZSS","pink"]
+            }
+    sistant = ""
+    nuevo = False
     fig = go.Figure()
     for satname in satlist:
         traza = est_orbitas.get(satname)
         df = pd.DataFrame(traza, columns=["DiaHora","x","y","z","dist","A","Z"]) # Armo un dataframe con la órbita del satélite en cuestión (satname)
         df2 = df.loc[df["Z"]<(pi/2)]   # me quedo sólo con las posiciones con Z < 90º --> del cenit al horizonte
+        sist = satname[0]
+        if sist != sistant:
+            sistant = sist
+            nuevo = True
+        else:
+            nuevo = False    
         fig.add_trace(go.Scatter3d(
             x=df2["x"],
             y=df2["y"],
             z=df2["z"],
             mode='markers',  # sólo puntos, sin líneas
-            marker=dict(size=2), # los puntos chiuquitos
-            name=satname))  # este es el label de la traza
+            showlegend=nuevo,
+            marker=dict(color=sistemas[sist][1],size=2), # los puntos chiuquitos
+            name=sistemas[sist][0]))  # este es el label de la traza
 
     fig.add_trace(go.Scatter3d(x=[0],y=[0],z=[0], name=estacion, mode='markers',
                     marker=dict(color='black', size=5, sizemode='diameter'))) # dibujo la estación
+    fig.update_layout(
+    legend=go.layout.Legend(itemsizing='constant'))  # Set the itemsizing attribute to 'constant'
     fig.show()
     return
 
@@ -143,11 +161,12 @@ R = {}
 orbitas = {}
 est_orbitas = {}
 
-filename = "igs11060.sp3"
+#filename = "igs11060.sp3"
+filename = "Orbitas\igs23231.sp3"
 satlist = []
 with open(filename,encoding="utf-8") as f:
     for line in f:
-        if line.startswith("*  2001"):     # las filas que empiezan con "*  año" contiuene la fecha y hora del bloque de datos siguiente
+        if line.startswith("*  2024"):     # las filas que empiezan con "*  año" contiuene la fecha y hora del bloque de datos siguiente
             seg = line[19:].split('.')
             fechaHora =  datetime(int(line[1:7]),int(line[7:10]),int(line[10:13]),int(line[13:16]),int(line[16:19]),int(seg[0]),int(seg[1]))
         elif line.startswith("P"):         # las filas que empiezan con "P" --> The Position and Clock Record
@@ -196,7 +215,7 @@ while 1:
     #print("4 - Lat, Lon")    <--- Tarea pendiente . . .
     print("x - Exit")
     if platform.system() == "Linux":
-        respuesta = readchar.readchar().decode('utf-8')
+        respuesta = readchar.readchar()  #.decode('utf-8')
     elif platform.system() == "Windows":
         respuesta = msvcrt.getch().decode('utf-8')
     if respuesta == "1":

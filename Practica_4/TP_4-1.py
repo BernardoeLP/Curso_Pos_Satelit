@@ -98,7 +98,7 @@ print('\n')
 time_axis = list(ddif["Seconds"])
 
 
-fig = make_subplots(rows=12, cols=1,shared_xaxes=True,vertical_spacing=0.02)
+fig = make_subplots(rows=12, cols=1,shared_xaxes=True,vertical_spacing=0.005)
 
 fila = 1
 for columns in graficos:
